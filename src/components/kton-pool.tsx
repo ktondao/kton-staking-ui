@@ -3,31 +3,22 @@
 import Image from 'next/image';
 import Loading from '@/components/loading';
 import { formatNumericValue } from '@/utils';
-import { useReadContract } from 'wagmi';
 import { useApp } from '@/hooks/useApp';
 import { useMemo } from 'react';
-import { abi } from '@/config/abi/KTONStakingRewards';
-import { formatEther } from 'viem';
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { usePoolAmount } from '@/hooks/usePoolAmount';
 
 interface KTONPoolProps {}
 
 const KTONPool = ({}: KTONPoolProps) => {
   const { activeChain } = useApp();
-  const { data, isPending, error } = useReadContract({
-    address: activeChain?.stakingContractAddress,
-    abi,
-    functionName: 'totalSupply'
-  });
-
-  console.log('data', data, error);
+  const { isLoading, formatted } = usePoolAmount();
 
   const totalSupply = useMemo(() => {
-    if (typeof data === 'bigint') {
-      console.log('fromatEther', formatEther(data));
-      return formatNumericValue(formatEther(data));
-    }
-  }, [data]);
+    return formatNumericValue(formatted);
+  }, [formatted]);
+
   return (
     <div className="flex h-[11rem] w-full flex-col items-center justify-center gap-[0.625rem] rounded-[0.3125rem;] bg-[#1A1D1F] p-[1.25rem]">
       <div className="rounded-full">
@@ -49,7 +40,7 @@ const KTONPool = ({}: KTONPoolProps) => {
           TOTAL {activeChain?.ktonToken?.symbol} POOL
         </h2>
         <div className="flex items-center justify-center">
-          {isPending ? (
+          {isLoading ? (
             <Loading className="mt-2" />
           ) : (
             <TooltipProvider>

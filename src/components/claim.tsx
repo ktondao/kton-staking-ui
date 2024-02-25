@@ -7,7 +7,7 @@ import Loading from '@/components/loading';
 import { useAccount } from 'wagmi';
 import { useMemo } from 'react';
 import { formatNumericValue } from '@/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useClaim } from '@/hooks/useClaim';
 import { useTransactionStatus } from '@/hooks/useTransactionStatus';
 
