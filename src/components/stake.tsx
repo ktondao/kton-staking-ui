@@ -1,32 +1,27 @@
 'use client';
 import { useApp } from '@/hooks/useApp';
-import {
-  useAccount,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-  useReadContract,
-  useCall
-} from 'wagmi';
+import { useAccount } from 'wagmi';
 import KTONAction from './kton-action';
-import { abi } from '@/config/abi/KTONStakingRewards';
 import { Button } from '@/components/ui/button';
 import { erc20Abi, parseEther } from 'viem';
 import { useTokenAllowanceAndApprove } from '@/hooks/useTokenAllowanceAndApprove';
 import { cn } from '@/lib/utils';
 import { MutableRefObject, useCallback, useMemo, useRef, useState } from 'react';
 import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
+import { useTransactionStatus } from '@/hooks/useTransactionStatus';
 import { useStake } from '@/hooks/useStake';
 import KTONBalance from './kton-balance';
 
 import type { Form, SubmitData } from './kton-action';
+import { usePoolAmount } from '@/hooks/usePoolAmount';
 
-interface StakeProps {}
-const Stake = ({}: StakeProps) => {
+const Stake = () => {
   const formRef: MutableRefObject<Form | null> = useRef(null);
   const [amount, setAmount] = useState<bigint>(0n);
   const { address, isConnected } = useAccount();
   const { activeChain, isCorrectChainId } = useApp();
 
+  const { refetch: refetchPoolAmount } = usePoolAmount();
   const {
     isLoading: isBalanceLoading,
     formatted: ktonEtherBalance,
@@ -38,58 +33,28 @@ const Stake = ({}: StakeProps) => {
     args: [address]
   });
 
-  const {
-    isAllowanceLoading,
-    allowance,
-    approve,
-    isApproving,
-    approveData,
-    isApproveSuccess,
-    isApproveError,
-    approveFailureReason
-  } = useTokenAllowanceAndApprove({
-    tokenAddress: activeChain?.ktonToken.address,
-    ownerAddress: address!,
-    spenderAddress: activeChain?.stakingContractAddress
-  });
+  const { allowance, isAllowanceLoading, approve, isApproving, approveData } =
+    useTokenAllowanceAndApprove({
+      tokenAddress: activeChain?.ktonToken.address,
+      ownerAddress: address!,
+      spenderAddress: activeChain?.stakingContractAddress
+    });
 
   const { stake, isStaking, stakeData } = useStake({
-    contractAddress: activeChain?.stakingContractAddress,
     ownerAddress: address!
   });
 
-  const result = useWaitForTransactionReceipt({
-    hash: stakeData
+  const { isLoading: isTransactionConfirming } = useTransactionStatus({
+    hash: approveData || stakeData,
+    onSuccess: () => {
+      if (stakeData) {
+        refetch();
+        refetchPoolAmount();
+      }
+    }
   });
 
-  console.log('result', result);
-
   const needApprove = !allowance || allowance < amount;
-
-  console.log('isAllowanceLoading', isAllowanceLoading);
-  console.log('allowance', allowance);
-  console.log('isApproving', isApproving);
-  console.log('approveData', approveData);
-  console.log('isApproveSuccess', isApproveSuccess);
-  console.log('approveError', isApproveError);
-  console.log('approveFailureReason', approveFailureReason);
-  console.log('needApprove', needApprove);
-
-  // const { data: balanceData, isFetching: isBalanceFetching } = useReadContract({
-  //   abi,
-  //   account: address,
-  //   address: activeChain?.stakingContractAddress,
-  //   functionName: 'balanceOf',
-  //   args: [address!]
-  // });
-
-  // const { data: earnedData, isFetching: isEarnedFetching } = useReadContract({
-  //   abi,
-  //   account: address,
-  //   address: activeChain?.stakingContractAddress,
-  //   functionName: 'earned',
-  //   args: [address!]
-  // });
 
   const handleAmountChange = useCallback((amount: string) => {
     if (amount) {
@@ -102,16 +67,9 @@ const Stake = ({}: StakeProps) => {
       if (needApprove) {
         approve(data.amount);
       } else {
-        stake(data.amount)
-          ?.then((res) => {
-            console.log('stake', res);
-          })
-          ?.catch((err) => {
-            console.log('stake err', err);
-          })
-          ?.finally(() => {
-            formRef.current?.setValue('amount', '');
-          });
+        stake(data.amount)?.finally(() => {
+          formRef.current?.setValue('amount', '');
+        });
       }
     },
     [approve, needApprove, stake]
@@ -124,20 +82,33 @@ const Stake = ({}: StakeProps) => {
     if (!isCorrectChainId) {
       return 'Wrong Network';
     }
-    if (isAllowanceLoading) {
-      return 'Checking Allowance';
+    if (isBalanceLoading || isAllowanceLoading) {
+      return 'Preparing...';
+    }
+    if (amount === 0n) {
+      return 'Enter Amount';
     }
     if (needApprove) {
       return 'Approve';
     }
-    if (isApproving) {
-      return 'Approving';
+    if (isApproving || isStaking) {
+      return 'Preparing Transaction';
     }
-    if (isStaking) {
-      return 'Staking';
+    if (isTransactionConfirming) {
+      return 'Confirming Transaction';
     }
     return 'Stake';
-  }, [isConnected, isCorrectChainId, isAllowanceLoading, needApprove, isApproving, isStaking]);
+  }, [
+    isConnected,
+    isCorrectChainId,
+    isBalanceLoading,
+    isAllowanceLoading,
+    needApprove,
+    isApproving,
+    isTransactionConfirming,
+    isStaking,
+    amount
+  ]);
 
   return (
     <KTONAction
@@ -159,7 +130,9 @@ const Stake = ({}: StakeProps) => {
       onAmountChange={handleAmountChange}
     >
       <Button
-        disabled={isAllowanceLoading || !isConnected || !isCorrectChainId || !amount}
+        disabled={
+          isAllowanceLoading || !isConnected || !isBalanceLoading || !isCorrectChainId || !amount
+        }
         type="submit"
         isLoading={isApproving || isStaking}
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}

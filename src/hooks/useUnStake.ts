@@ -7,12 +7,11 @@ import { abi } from '@/config/abi/KTONStakingRewards';
 import { useApp } from './useApp';
 
 interface UseUnStakeProps {
-  contractAddress: `0x${string}`;
   ownerAddress: `0x${string}`;
 }
 
-export function useUnStake({ contractAddress, ownerAddress }: UseUnStakeProps) {
-  const { activeChainId } = useApp();
+export function useUnStake({ ownerAddress }: UseUnStakeProps) {
+  const { activeChainId, activeChain } = useApp();
   const toastRef = useRef<string | number | null>(null);
 
   const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
@@ -23,13 +22,13 @@ export function useUnStake({ contractAddress, ownerAddress }: UseUnStakeProps) {
       return await writeContractAsync({
         chainId: activeChainId,
         abi,
-        address: contractAddress,
+        address: activeChain?.stakingContractAddress,
         account: ownerAddress!,
         functionName: 'withdraw',
         args: [parseEther(amount)]
       });
     },
-    [contractAddress, activeChainId, ownerAddress, writeContractAsync]
+    [activeChain?.stakingContractAddress, activeChainId, ownerAddress, writeContractAsync]
   );
 
   useEffect(() => {

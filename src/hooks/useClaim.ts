@@ -7,13 +7,12 @@ import { abi } from '@/config/abi/KTONStakingRewards';
 import { useApp } from './useApp';
 
 interface useClaimProps {
-  contractAddress: `0x${string}`;
   ownerAddress: `0x${string}`;
 }
 
-export function useClaim({ contractAddress, ownerAddress }: useClaimProps) {
+export function useClaim({ ownerAddress }: useClaimProps) {
   const toastRef = useRef<string | number | null>(null);
-  const { activeChainId } = useApp();
+  const { activeChainId, activeChain } = useApp();
   const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
     useWriteContract();
 
@@ -21,12 +20,12 @@ export function useClaim({ contractAddress, ownerAddress }: useClaimProps) {
     return await writeContractAsync({
       chainId: activeChainId,
       abi,
-      address: contractAddress,
+      address: activeChain.stakingContractAddress,
       account: ownerAddress!,
       functionName: 'getReward',
       args: []
     });
-  }, [contractAddress, activeChainId, ownerAddress, writeContractAsync]);
+  }, [activeChain.stakingContractAddress, activeChainId, ownerAddress, writeContractAsync]);
 
   useEffect(() => {
     if (isError) {

@@ -8,22 +8,18 @@ import { abi } from '@/config/abi/KTONStakingRewards';
 import { useApp } from './useApp';
 
 interface UseStakedKTONAmountProps {
-  contractAddress: `0x${string}`;
   ownerAddress: `0x${string}`;
 }
 
-export const useStakedKTONAmount = ({
-  contractAddress,
-  ownerAddress
-}: UseStakedKTONAmountProps) => {
-  const { activeChainId } = useApp();
+export const useStakedKTONAmount = ({ ownerAddress }: UseStakedKTONAmountProps) => {
+  const { activeChainId, activeChain } = useApp();
 
-  const { data, isLoading, isError, isSuccess } = useReadContract({
+  const { data, isLoading, isError, isSuccess, refetch } = useReadContract({
     chainId: activeChainId,
-    address: contractAddress,
+    address: activeChain.stakingContractAddress,
     abi,
     functionName: 'balanceOf',
-    args: [ownerAddress]
+    args: [ownerAddress!]
   });
 
   const balance = useMemo(() => {
@@ -37,8 +33,9 @@ export const useStakedKTONAmount = ({
   }, [data, isSuccess, isError]);
 
   return {
-    balance,
-    etherBalance: formatEther(balance),
-    isLoading
+    value: balance,
+    formatted: formatEther(balance),
+    isLoading,
+    refetch
   };
 };

@@ -1,8 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { abi } from '@/config/abi/KTONStakingRewards';
 import { useApp } from '@/hooks/useApp';
-import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
 import Loading from '@/components/loading';
 import { useAccount } from 'wagmi';
 import { useMemo } from 'react';
@@ -10,24 +8,21 @@ import { formatNumericValue } from '@/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useClaim } from '@/hooks/useClaim';
 import { useTransactionStatus } from '@/hooks/useTransactionStatus';
+import { useRingRewardAmount } from '@/hooks/useRingRewardAmount';
 
 const Claim = () => {
   const { address, isConnected } = useAccount();
-  const { activeChain, isCorrectChainId } = useApp();
+  const { isCorrectChainId } = useApp();
 
-  const { isLoading, value, formatted, refetch } = useBigIntContractQuery({
-    contractAddress: activeChain?.stakingContractAddress,
-    abi: abi,
-    functionName: 'earned',
-    args: [address]
-  });
-
-  const { claim, isClaiming, claimData } = useClaim({
-    contractAddress: activeChain?.stakingContractAddress,
+  const { isLoading, value, formatted, refetch } = useRingRewardAmount({
     ownerAddress: address!
   });
 
-  const { isLoading: isTransactionReceipt } = useTransactionStatus({
+  const { claim, isClaiming, claimData } = useClaim({
+    ownerAddress: address!
+  });
+
+  const { isLoading: isTransactionConfirming } = useTransactionStatus({
     hash: claimData,
     onSuccess() {
       refetch();
@@ -46,16 +41,19 @@ const Claim = () => {
       return 'Wrong Network';
     }
     if (isLoading) {
-      return 'Checking Rewards...';
+      return 'Preparing...';
     }
     if (value === 0n) {
       return 'No Rewards';
     }
-    if (isClaiming || isTransactionReceipt) {
-      return 'Claiming';
+    if (isClaiming) {
+      return 'Preparing Transaction';
+    }
+    if (isTransactionConfirming) {
+      return 'Confirming Transaction';
     }
     return 'Claim';
-  }, [isConnected, isCorrectChainId, isLoading, value, isClaiming, isTransactionReceipt]);
+  }, [isConnected, isCorrectChainId, isLoading, value, isClaiming, isTransactionConfirming]);
 
   return (
     <div>
@@ -87,7 +85,7 @@ const Claim = () => {
       </div>
       <Button
         disabled={value === 0n || isLoading || !isConnected || !isCorrectChainId}
-        isLoading={isClaiming || isTransactionReceipt}
+        isLoading={isClaiming || isTransactionConfirming}
         type="submit"
         onClick={claim}
         className="mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white"

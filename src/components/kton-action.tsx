@@ -1,4 +1,5 @@
 'use client';
+
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UseFormReturn, useForm } from 'react-hook-form';
@@ -117,15 +118,6 @@ const KTONAction = forwardRef<Form, KTONActionProps>(
                 {renderBalance ? (
                   <FormDescription className=" mt-[0.62rem] flex items-center text-[0.75rem] font-bold leading-normal">
                     Balance: {renderBalance}
-                    {/* {isConnected ? (
-                    <KTONBalance
-                      symbol={activeChain?.ktonToken?.symbol}
-                      isPending={isPending}
-                      etherBalance={etherBalance}
-                    />
-                  ) : (
-                    '0 KTON'
-                  )} */}
                   </FormDescription>
                 ) : null}
               </FormItem>

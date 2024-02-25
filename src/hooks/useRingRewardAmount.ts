@@ -7,19 +7,15 @@ import { useReadContract } from 'wagmi';
 import { abi } from '@/config/abi/KTONStakingRewards';
 import { useApp } from './useApp';
 
-interface UseStakedKTONAmountProps {
-  contractAddress: `0x${string}`;
+interface UseRingRewardAmountProps {
   ownerAddress: `0x${string}`;
 }
 
-export const useStakedKTONAmount = ({
-  contractAddress,
-  ownerAddress
-}: UseStakedKTONAmountProps) => {
-  const { activeChainId } = useApp();
-  const { data, isLoading, isError, isSuccess } = useReadContract({
+export const useRingRewardAmount = ({ ownerAddress }: UseRingRewardAmountProps) => {
+  const { activeChainId, activeChain } = useApp();
+  const { data, isLoading, isError, isSuccess, refetch } = useReadContract({
     chainId: activeChainId,
-    address: contractAddress,
+    address: activeChain.stakingContractAddress,
     abi,
     functionName: 'earned',
     args: [ownerAddress]
@@ -36,8 +32,9 @@ export const useStakedKTONAmount = ({
   }, [data, isSuccess, isError]);
 
   return {
-    balance,
-    etherBalance: formatEther(balance),
-    isLoading
+    value: balance,
+    formatted: formatEther(balance),
+    isLoading,
+    refetch
   };
 };
