@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useWriteContract } from 'wagmi';
-import { WriteContractReturnType, parseEther } from 'viem';
+import { WriteContractReturnType } from 'viem';
 import { toast } from 'sonner';
 
 import { abi } from '@/config/abi/KTONStakingRewards';

@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { formatEther } from 'viem';
-import { useReadContract, Config } from 'wagmi';
+import { useReadContract, Config, useAccount } from 'wagmi';
 import { useApp } from './useApp';
 
 interface UseBigIntContractQueryProps {
@@ -10,6 +10,7 @@ interface UseBigIntContractQueryProps {
   contractAddress: `0x${string}`;
   functionName: string;
   args?: any[];
+  forceEnabled?: boolean;
 }
 
 export const useBigIntContractQuery = ({
@@ -18,7 +19,9 @@ export const useBigIntContractQuery = ({
   functionName,
   args = []
 }: UseBigIntContractQueryProps) => {
+  const { isConnected } = useAccount();
   const { activeChainId } = useApp();
+
   const { data, refetch, isLoading, isSuccess } = useReadContract<
     any,
     string,
@@ -30,7 +33,10 @@ export const useBigIntContractQuery = ({
     address: contractAddress,
     abi,
     functionName,
-    args
+    args,
+    query: {
+      enabled: isConnected
+    }
   });
 
   const result = useMemo(() => {

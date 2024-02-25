@@ -16,7 +16,7 @@ import { crab, darwinia, pangolin } from '@/config/chains';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import { APP_NAME } from '@/config/baseInfo';
-import { getChainConfigs, getDefaultChainConfig } from '@/utils/chain';
+import { getDefaultChainWithLocalStorage } from '@/utils/chain';
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 
@@ -56,7 +56,7 @@ export function Web3AppProvider({ children }: React.PropsWithChildren<{}>) {
           appInfo={{
             appName: APP_NAME
           }}
-          initialChain={getDefaultChainConfig()}
+          initialChain={getDefaultChainWithLocalStorage()}
         >
           {children}
         </RainbowKitProvider>

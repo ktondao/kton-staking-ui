@@ -4,12 +4,15 @@ import React, { createContext, useCallback, useEffect, useRef, useMemo, useState
 import { useAccount, useSwitchChain } from 'wagmi';
 import { toast } from 'sonner';
 import { ChainConfig, ChainId } from '@/types/chains';
-import { getChainById, getDefaultChainConfig } from '@/utils/chain';
+import {
+  getChainById,
+  getDefaultChainConfig,
+  getDefaultChainIdWithLocalStorage,
+  getDefaultChainWithLocalStorage
+} from '@/utils/chain';
 import { useDebounce } from 'react-use';
-
-const CHAIN_ID_KEY = 'CHAIN_ID_KEY';
-const defaultChainId = (localStorage.getItem(CHAIN_ID_KEY) ||
-  getDefaultChainConfig()?.id) as ChainId;
+import { CHAIN_ID_KEY } from '@/config/baseInfo';
+import { setItem } from '@/utils/storage';
 
 interface ChainContextType {
   activeChainId: ChainId;
@@ -17,44 +20,50 @@ interface ChainContextType {
   isCorrectChainId: boolean;
   isSupportedChainId: boolean;
   activeChain: ChainConfig;
-  handleSwitchChain: (chainId: ChainId) => void;
+  switchChain: (chainId: ChainId) => void;
 }
 
 export const ChainContext = createContext<ChainContextType>({
-  activeChainId: defaultChainId,
+  activeChainId: getDefaultChainIdWithLocalStorage(),
   setActiveChainId: () => {},
   isCorrectChainId: false,
   isSupportedChainId: false,
-  activeChain: getDefaultChainConfig(),
-  handleSwitchChain: () => {}
+  activeChain: getDefaultChainWithLocalStorage(),
+  switchChain: () => {}
 });
 
 export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const toastRef = useRef<string | number | null>(null);
-  const [activeChainId, setActiveChainId] = useState<ChainId>(Number(defaultChainId));
+  const [activeChainId, setActiveChainId] = useState<ChainId>(getDefaultChainIdWithLocalStorage());
 
   const { chainId } = useAccount();
   const { chains, switchChain } = useSwitchChain();
+
+  const handleSetActiveChainId = useCallback(
+    (chainId: ChainId) => {
+      setActiveChainId(chainId);
+      setItem(CHAIN_ID_KEY, chainId as unknown as string);
+    },
+    [setActiveChainId]
+  );
 
   const handleSwitchChain = useCallback(
     (selectedChainId: ChainId) => {
       if (chainId)
         if (selectedChainId === chainId) {
-          setActiveChainId(selectedChainId);
-          localStorage.setItem(CHAIN_ID_KEY, selectedChainId as unknown as string);
+          handleSetActiveChainId(selectedChainId);
           return;
         }
       switchChain(
         { chainId: selectedChainId },
         {
           onSuccess: () => {
-            setActiveChainId(selectedChainId);
-            localStorage.setItem(CHAIN_ID_KEY, selectedChainId as unknown as string);
+            handleSetActiveChainId(selectedChainId);
           }
         }
       );
     },
-    [switchChain, chainId]
+    [switchChain, chainId, handleSetActiveChainId]
   );
 
   const activeChain = useMemo(
@@ -121,8 +130,8 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
       value={{
         activeChain,
         activeChainId,
-        setActiveChainId,
-        handleSwitchChain,
+        setActiveChainId: handleSetActiveChainId,
+        switchChain: handleSwitchChain,
         isSupportedChainId,
         isCorrectChainId
       }}

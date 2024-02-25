@@ -12,7 +12,6 @@ import { ChainConfig } from '@/types/chains';
 import { useApp } from '@/hooks/useApp';
 import { getChainById, getChainConfigs } from '@/utils/chain';
 import Button from './button';
-import { useAccount } from 'wagmi';
 
 const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => (
   <>
@@ -30,8 +29,7 @@ const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => (
 const SwitchChain = () => {
   const [open, setOpen] = useState(false);
   const chains = getChainConfigs();
-  const { chainId } = useAccount();
-  const { activeChainId, handleSwitchChain } = useApp();
+  const { activeChainId, switchChain } = useApp();
 
   const activeChain = useMemo(() => getChainById(activeChainId), [activeChainId]);
 
@@ -52,7 +50,7 @@ const SwitchChain = () => {
       <DropdownMenuContent className="w-[8.5625rem] gap-[0.625rem] rounded-[0.3125rem] border border-primary p-[0.625rem]">
         {chains.map((chain) => (
           <DropdownMenuItem
-            onClick={() => handleSwitchChain(chain.id)}
+            onClick={() => switchChain(chain.id)}
             className="flex cursor-pointer items-center gap-[0.31rem] p-[0.625rem] focus:bg-[rgba(94,214,42,.1)]"
             style={{
               backgroundColor: activeChainId === chain.id ? 'rgba(94,214,42,.1)' : ''

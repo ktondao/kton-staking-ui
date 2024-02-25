@@ -1,26 +1,22 @@
-"use client";
+'use client';
 
-import {
-  useConnectModal,
-  useAccountModal,
-  useChainModal,
-} from "@rainbow-me/rainbowkit";
-import Button from "@/components/connect-button/button";
-import Account from "./account";
-import SwitchChain from "./switch-chain";
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from '@/components/connect-button/button';
+import Account from './account';
+import SwitchChain from './switch-chain';
+import { useAccount } from 'wagmi';
 
 const ConnectButton = () => {
   const { openConnectModal } = useConnectModal();
-  const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
+  const { address, isConnected } = useAccount();
 
   return (
     <div className="flex w-full items-center justify-between space-x-[1.25rem] md:w-auto md:justify-center">
-      {openConnectModal ? (
+      {!isConnected && openConnectModal ? (
         <Button onClick={openConnectModal}>Connect Wallet</Button>
       ) : null}
-      {openChainModal ? <SwitchChain /> : null}
-      {openAccountModal ? <Account /> : null}
+      {isConnected ? <SwitchChain /> : null}
+      {address ? <Account /> : null}
     </div>
   );
 };

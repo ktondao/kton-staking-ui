@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useReadContract, useWriteContract } from 'wagmi';
+import { useReadContract, useWriteContract, useAccount } from 'wagmi';
 import { erc20Abi, parseEther } from 'viem';
 import { toast } from 'sonner';
 import { useApp } from './useApp';
@@ -16,6 +16,7 @@ export function useTokenAllowanceAndApprove({
   spenderAddress
 }: UseTokenAllowanceAndApproveProps) {
   const toastRef = useRef<string | number | null>(null);
+  const { isConnected } = useAccount();
   const { activeChainId } = useApp();
 
   const { data: allowance, isLoading: isAllowanceLoading } = useReadContract({
@@ -23,7 +24,10 @@ export function useTokenAllowanceAndApprove({
     address: tokenAddress,
     abi: erc20Abi,
     functionName: 'allowance',
-    args: [ownerAddress, spenderAddress]
+    args: [ownerAddress, spenderAddress],
+    query: {
+      enabled: isConnected
+    }
   });
 
   const { writeContract, isPending, isError, isSuccess, failureReason, data } = useWriteContract();

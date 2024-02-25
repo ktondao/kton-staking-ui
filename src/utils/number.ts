@@ -49,9 +49,6 @@ export const validateNotGreaterThan = (firstValue: string, secondValue: string):
   const firstNumber = Number(firstValue);
   const secondNumber = Number(secondValue);
 
-  console.log('firstNumber', firstNumber);
-  console.log('secondNumber', secondNumber);
-
   // Check if both values are valid numbers
   if (Number.isNaN(firstNumber) || Number.isNaN(secondNumber)) {
     return false;
