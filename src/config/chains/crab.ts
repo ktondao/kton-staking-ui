@@ -44,6 +44,5 @@ export const crab: ChainConfig = {
     symbol: 'CKTON',
     decimals: 18,
     logoPath: '/images/token/ckton.svg'
-  },
-  primaryColor: '255 77% 56%'
+  }
 } as const satisfies ChainConfig;

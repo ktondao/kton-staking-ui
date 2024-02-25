@@ -49,8 +49,5 @@ export const pangolin: ChainConfig = {
   /**
    * stakingContract
    */
-  stakingContractAddress: '0x000000000419683a1a03abc21fc9da25fd2b4dd7',
-  // stakingContractAddress: '0x0f14341a7f464320319025540e8fe48ad0fe5aec',
-
-  primaryColor: '102 68% 50%'
+  stakingContractAddress: '0x000000000419683a1a03abc21fc9da25fd2b4dd7'
 } as const satisfies ChainConfig;

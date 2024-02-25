@@ -49,6 +49,5 @@ export const darwinia: ChainConfig = {
     symbol: 'KTON',
     decimals: 18,
     logoPath: '/images/token/kton.svg'
-  },
-  primaryColor: '102 68% 50%'
+  }
 } as const satisfies ChainConfig;
