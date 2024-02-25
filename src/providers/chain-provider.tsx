@@ -72,9 +72,16 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
   );
 
   useEffect(() => {
-    if (activeChain?.primaryColor)
-      document.documentElement.style.setProperty('--primary', activeChain.primaryColor);
-  }, [activeChain?.primaryColor]);
+    if (activeChain?.name) {
+      const currentClasses = document.body.classList;
+      currentClasses.forEach((className) => {
+        if (className.endsWith('-theme')) {
+          document.body.classList.remove(className);
+        }
+      });
+      document.body.classList.add(`${activeChain.name?.toLocaleLowerCase()}-theme`);
+    }
+  }, [activeChain?.name]);
 
   const isSupportedChainId = useMemo(
     () => Boolean(chainId && chains?.some((chain) => chain.id === chainId)),
