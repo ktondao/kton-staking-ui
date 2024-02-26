@@ -1,11 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import { useMemo } from 'react';
+
 import Loading from '@/components/loading';
 import { formatNumericValue } from '@/utils';
 import { useApp } from '@/hooks/useApp';
-import { useMemo } from 'react';
-
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 

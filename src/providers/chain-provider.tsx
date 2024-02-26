@@ -3,6 +3,8 @@
 import React, { createContext, useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useAccount, useSwitchChain } from 'wagmi';
 import { toast } from 'sonner';
+import { useDebounce } from 'react-use';
+
 import { ChainConfig, ChainId } from '@/types/chains';
 import {
   getChainById,
@@ -10,7 +12,6 @@ import {
   getDefaultChainIdWithLocalStorage,
   getDefaultChainWithLocalStorage
 } from '@/utils/chain';
-import { useDebounce } from 'react-use';
 import { CHAIN_ID_KEY } from '@/config/baseInfo';
 import { setItem } from '@/utils/storage';
 

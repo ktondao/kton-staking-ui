@@ -2,9 +2,9 @@ import dynamic from 'next/dynamic';
 
 import { PoolProvider } from '@/providers/pool-provider';
 import DefiTabs from '@/components/defi-tabs';
+import KTONPoolLoading from '@/components/kton-pool-loading';
 
 import type { PropsWithChildren } from 'react';
-import KTONPoolLoading from '@/components/kton-pool-loading';
 
 const KTONPool = dynamic(() => import('@/components/kton-pool'), {
   ssr: false,

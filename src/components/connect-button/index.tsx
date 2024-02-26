@@ -1,10 +1,12 @@
 'use client';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
+
 import Button from '@/components/connect-button/button';
+
 import Account from './account';
 import SwitchChain from './switch-chain';
-import { useAccount } from 'wagmi';
 
 const ConnectButton = () => {
   const { openConnectModal } = useConnectModal();

@@ -1,7 +1,8 @@
 'use client';
 
-import { useBigIntContractQuery } from './useBigIntContractQuery';
 import { abi } from '@/config/abi/KTONStakingRewards';
+
+import { useBigIntContractQuery } from './useBigIntContractQuery';
 import { useApp } from './useApp';
 
 interface UseRingRewardAmountProps {

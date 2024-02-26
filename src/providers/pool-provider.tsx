@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext } from 'react';
+
 import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
 import { useApp } from '@/hooks/useApp';
 import { abi } from '@/config/abi/KTONStakingRewards';

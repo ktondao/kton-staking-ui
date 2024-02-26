@@ -12,6 +12,7 @@ import {
   trustWallet,
   safeWallet
 } from '@rainbow-me/rainbowkit/wallets';
+
 import { APP_NAME } from '@/config/baseInfo';
 import { getChains, getDefaultChainWithLocalStorage } from '@/utils/chain';
 

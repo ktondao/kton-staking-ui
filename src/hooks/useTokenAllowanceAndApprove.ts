@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useReadContract, useWriteContract, useAccount } from 'wagmi';
 import { erc20Abi, parseEther } from 'viem';
 import { toast } from 'sonner';
+
 import { useApp } from './useApp';
 
 interface UseTokenAllowanceAndApproveProps {

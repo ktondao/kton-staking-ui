@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { formatEther } from 'viem';
 import { useReadContract, Config, useAccount } from 'wagmi';
+
 import { useApp } from './useApp';
 
 interface UseBigIntContractQueryProps {

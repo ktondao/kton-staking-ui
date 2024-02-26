@@ -1,16 +1,18 @@
 'use client';
 
 import Image from 'next/image';
+import { use, useEffect, useMemo, useState } from 'react';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { use, useEffect, useMemo, useState } from 'react';
 import { ChainConfig } from '@/types/chains';
 import { useApp } from '@/hooks/useApp';
 import { getChainById, getChains } from '@/utils/chain';
+
 import Button from './button';
 
 const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {

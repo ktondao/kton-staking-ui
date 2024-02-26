@@ -1,11 +1,12 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { PropsWithChildren } from 'react';
+import Link from 'next/link';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { menuItems } from '@/config/menu';
-import { PropsWithChildren } from 'react';
-import Link from 'next/link';
 
 const DefiTabs = ({ children }: PropsWithChildren) => {
   const defaultValue = menuItems[0]?.key;

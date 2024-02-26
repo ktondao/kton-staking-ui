@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+
 import ConnectButton from "@/components/connect-button";
 
 const Header = () => {

@@ -2,8 +2,10 @@ import { Config, useWaitForTransactionReceipt } from 'wagmi';
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { WaitForTransactionReceiptData } from 'wagmi/query';
+
 import { ChainId } from '@/types/chains';
 import { getChainById } from '@/utils';
+
 import { useApp } from './useApp';
 
 interface UseTransactionStatusProps {

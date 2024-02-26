@@ -1,9 +1,10 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { JetBrains_Mono } from 'next/font/google';
 import { Toaster as Sonner } from 'sonner';
+
+import { cn } from '@/lib/utils';
 
 type ToasterOriginProps = React.ComponentProps<typeof Sonner>;
 

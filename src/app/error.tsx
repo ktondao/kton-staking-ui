@@ -1,7 +1,8 @@
 'use client';
 
-import ErrorComponent from '@/components/error';
 import { useEffect } from 'react';
+
+import ErrorComponent from '@/components/error';
 
 const ErrorPage = ({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) => {
   useEffect(() => {

@@ -1,11 +1,13 @@
-import type { Metadata } from 'next';
-import { Web3AppProvider } from '@/providers/web3-app-provider';
 import { JetBrains_Mono } from 'next/font/google';
+
+import { Web3AppProvider } from '@/providers/web3-app-provider';
 import './globals.css';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { ChainProvider } from '@/providers/chain-provider';
 import { Toaster } from '@/components/ui/sonner';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'KTON Staking Dashboard',

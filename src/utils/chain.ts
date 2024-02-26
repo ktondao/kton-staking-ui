@@ -1,7 +1,8 @@
 import { darwinia, crab, pangolin } from '@/config/chains';
 import { ChainConfig, ChainId } from '@/types/chains';
-import { getItem } from './storage';
 import { CHAIN_ID_KEY } from '@/config/baseInfo';
+
+import { getItem } from './storage';
 
 // Map object to return a specific chain configuration
 // Using Record<ChainId, ChainConfig> to ensure type safety

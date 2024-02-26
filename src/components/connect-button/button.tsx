@@ -1,6 +1,8 @@
-import type { ButtonProps } from "@/components/ui/button";
-import { Button as BaseButton } from "@/components/ui/button";
 import * as React from "react";
+
+import { Button as BaseButton } from "@/components/ui/button";
+
+import type { ButtonProps } from "@/components/ui/button";
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
