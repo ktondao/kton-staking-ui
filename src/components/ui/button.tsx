@@ -36,10 +36,24 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isLoading?: boolean;
+  isFetching?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, disabled, isLoading, children, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      disabled,
+      isLoading,
+      isFetching,
+      children,
+      asChild = false,
+      ...props
+    },
+    ref
+  ) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp

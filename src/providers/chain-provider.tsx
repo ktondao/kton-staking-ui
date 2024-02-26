@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { ChainConfig, ChainId } from '@/types/chains';
 import {
   getChainById,
-  getDefaultChainConfig,
+  getDefaultChain,
   getDefaultChainIdWithLocalStorage,
   getDefaultChainWithLocalStorage
 } from '@/utils/chain';
@@ -67,7 +67,7 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
   );
 
   const activeChain = useMemo(
-    () => getChainById(activeChainId) || getDefaultChainConfig(),
+    () => getChainById(activeChainId) || getDefaultChain(),
     [activeChainId]
   );
 

@@ -135,7 +135,11 @@ const UnStake = () => {
         isLoading={isApproving || isUnStaking}
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
-        {buttonText}
+        {isAllowanceLoading || isAmountLoading ? (
+          <span className=" animate-pulse"> {buttonText}</span>
+        ) : (
+          buttonText
+        )}
       </Button>
     </KTONAction>
   );

@@ -131,13 +131,17 @@ const Stake = () => {
     >
       <Button
         disabled={
-          isAllowanceLoading || !isConnected || !isBalanceLoading || !isCorrectChainId || !amount
+          isAllowanceLoading || isBalanceLoading || !isConnected || !isCorrectChainId || !amount
         }
         type="submit"
         isLoading={isApproving || isStaking}
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
-        {buttonText}
+        {isAllowanceLoading || isBalanceLoading ? (
+          <span className=" animate-pulse"> {buttonText}</span>
+        ) : (
+          buttonText
+        )}
       </Button>
     </KTONAction>
   );

@@ -10,7 +10,7 @@ import {
 import { useMemo, useState } from 'react';
 import { ChainConfig } from '@/types/chains';
 import { useApp } from '@/hooks/useApp';
-import { getChainById, getChainConfigs } from '@/utils/chain';
+import { getChainById, getChains } from '@/utils/chain';
 import Button from './button';
 
 const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => (
@@ -28,7 +28,7 @@ const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => (
 
 const SwitchChain = () => {
   const [open, setOpen] = useState(false);
-  const chains = getChainConfigs();
+  const chains = getChains();
   const { activeChainId, switchChain } = useApp();
 
   const activeChain = useMemo(() => getChainById(activeChainId), [activeChainId]);

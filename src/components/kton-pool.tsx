@@ -27,6 +27,7 @@ const KTONPool = ({}: KTONPoolProps) => {
             src={activeChain?.ktonToken?.logoPath}
             alt="kton icon"
             width={70}
+            priority
             height={70}
             className="h-[4.375rem] w-[4.375rem] rounded-full"
             style={{

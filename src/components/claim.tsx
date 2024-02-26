@@ -90,7 +90,7 @@ const Claim = () => {
         onClick={claim}
         className="mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white"
       >
-        {buttonText}
+        {isLoading ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
     </div>
   );

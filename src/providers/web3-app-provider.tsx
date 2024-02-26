@@ -12,11 +12,10 @@ import {
   trustWallet,
   safeWallet
 } from '@rainbow-me/rainbowkit/wallets';
-import { crab, darwinia, pangolin } from '@/config/chains';
+import { APP_NAME } from '@/config/baseInfo';
+import { getChains, getDefaultChainWithLocalStorage } from '@/utils/chain';
 
 import '@rainbow-me/rainbowkit/styles.css';
-import { APP_NAME } from '@/config/baseInfo';
-import { getDefaultChainWithLocalStorage } from '@/utils/chain';
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 
@@ -34,7 +33,7 @@ export const config = getDefaultConfig({
       wallets: [talismanWallet, okxWallet, imTokenWallet, trustWallet, safeWallet]
     }
   ],
-  chains: [darwinia, crab, pangolin],
+  chains: getChains(),
   ssr: true,
   storage: createStorage({
     storage: cookieStorage
