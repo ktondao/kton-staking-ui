@@ -4,8 +4,12 @@ import { PoolProvider } from '@/providers/pool-provider';
 import DefiTabs from '@/components/defi-tabs';
 
 import type { PropsWithChildren } from 'react';
+import KTONPoolLoading from '@/components/kton-pool-loading';
 
-const KTONPool = dynamic(() => import('@/components/kton-pool'), { ssr: false });
+const KTONPool = dynamic(() => import('@/components/kton-pool'), {
+  ssr: false,
+  loading: () => <KTONPoolLoading />
+});
 
 const DefiLayout = ({ children }: PropsWithChildren) => {
   return (

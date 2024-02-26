@@ -7,24 +7,35 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import { ChainConfig } from '@/types/chains';
 import { useApp } from '@/hooks/useApp';
 import { getChainById, getChains } from '@/utils/chain';
 import Button from './button';
 
-const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => (
-  <>
-    <Image
-      src={chain.iconUrl as string}
-      width={24}
-      height={24}
-      className="h-[1.5rem] w-[1.5rem] rounded-full"
-      alt={chain.name}
-    />
-    <span className="text-[0.875rem] font-light leading-6">{chain.name}</span>
-  </>
-);
+const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    mounted && (
+      <>
+        <Image
+          src={chain.iconUrl as string}
+          width={24}
+          height={24}
+          loading="eager"
+          className="h-[1.5rem] w-[1.5rem] rounded-full"
+          alt={chain.name}
+        />
+        <span className="text-[0.875rem] font-light leading-6">{chain.name}</span>
+      </>
+    )
+  );
+};
 
 const SwitchChain = () => {
   const [open, setOpen] = useState(false);

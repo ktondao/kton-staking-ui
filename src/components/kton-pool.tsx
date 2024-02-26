@@ -9,9 +9,7 @@ import { useMemo } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 
-interface KTONPoolProps {}
-
-const KTONPool = ({}: KTONPoolProps) => {
+const KTONPool = () => {
   const { activeChain } = useApp();
   const { isLoading, formatted } = usePoolAmount();
 
@@ -20,7 +18,7 @@ const KTONPool = ({}: KTONPoolProps) => {
   }, [formatted]);
 
   return (
-    <div className="flex h-[11rem] w-full flex-col items-center justify-center gap-[0.625rem] rounded-[0.3125rem;] bg-[#1A1D1F] p-[1.25rem]">
+    <div className="flex h-[11rem] w-full flex-col items-center justify-center gap-[0.625rem] rounded-[0.3125rem] bg-[#1A1D1F] p-[1.25rem]">
       <div className="rounded-full">
         {activeChain?.ktonToken?.logoPath ? (
           <Image

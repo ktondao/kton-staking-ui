@@ -1,6 +1,11 @@
 import dynamic from 'next/dynamic';
 
-const Unstake = dynamic(() => import('@/components/unstake'), { ssr: false });
+import KTONActionLoading from '@/components/kton-action-loading';
+
+const Unstake = dynamic(() => import('@/components/unstake'), {
+  ssr: false,
+  loading: () => <KTONActionLoading />
+});
 
 const UnstakePage = () => {
   return <Unstake />;
