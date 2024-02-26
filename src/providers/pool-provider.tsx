@@ -25,7 +25,8 @@ export const PoolProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
   const { value, formatted, isLoading, refetch } = useBigIntContractQuery({
     contractAddress: activeChain?.stakingContractAddress,
     abi,
-    functionName: 'totalSupply'
+    functionName: 'totalSupply',
+    forceEnabled: true
   });
 
   return (

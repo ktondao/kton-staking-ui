@@ -17,6 +17,7 @@ export const useBigIntContractQuery = ({
   contractAddress,
   abi,
   functionName,
+  forceEnabled,
   args = []
 }: UseBigIntContractQueryProps) => {
   const { isConnected } = useAccount();
@@ -35,7 +36,7 @@ export const useBigIntContractQuery = ({
     functionName,
     args,
     query: {
-      enabled: isConnected
+      enabled: forceEnabled ? true : isConnected
     }
   });
 

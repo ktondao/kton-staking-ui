@@ -1,7 +1,7 @@
 'use client';
 import { useAccount, useDisconnect } from 'wagmi';
-import Button from './button';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +9,8 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { toShortAddress } from '@/utils';
+
+import Button from './button';
 
 const Account = () => {
   const { address } = useAccount();
@@ -18,7 +20,13 @@ const Account = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button>
-          <Jazzicon diameter={24} seed={jsNumberForAddress(address)} />
+          <Jazzicon
+            diameter={24}
+            seed={jsNumberForAddress(address)}
+            svgStyles={{
+              borderRadius: '50%'
+            }}
+          />
           <span>{toShortAddress(address)?.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>
