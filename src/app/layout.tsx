@@ -20,10 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      />
       <body className={fontJetBrainsMono.className}>
         <Web3AppProvider>
           <ChainProvider>
-            <div className="flex h-screen w-screen flex-col ">
+            <div className="flex h-dvh w-screen flex-col overflow-hidden lg:h-screen">
               <Header />
               <main className="flex-1">{children}</main>
               <Footer />

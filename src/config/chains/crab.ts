@@ -44,5 +44,6 @@ export const crab: ChainConfig = {
     symbol: 'CKTON',
     decimals: 18,
     logoPath: '/images/token/ckton.svg'
-  }
+  },
+  stakingContractAddress: '0x'
 } as const satisfies ChainConfig;

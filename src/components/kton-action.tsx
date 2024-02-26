@@ -98,7 +98,7 @@ const KTONAction = forwardRef<Form, KTONActionProps>(
                       placeholder="0.000"
                       {...field}
                       className={cn(
-                        'flex items-center gap-[0.625rem] self-stretch rounded-[0.3125rem] border  bg-[#242a2e] px-[0.625rem] pb-[0.625rem] pt-[0.4375rem] focus-visible:ring-0 focus-visible:transition-all',
+                        'flex items-center gap-[0.625rem] self-stretch rounded-[0.3125rem] border  bg-[#242a2e] px-[0.625rem] pb-[0.625rem] pt-[0.4375rem] text-base focus-visible:ring-0 focus-visible:transition-all',
                         form.formState.errors.amount ? 'border-red-500' : 'border-white',
                         form.formState.errors.amount
                           ? 'focus-visible:outline-red-500/30'
