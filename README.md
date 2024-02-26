@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# KTON Staking Dashboard
+
+## Introduction
+
+Welcome to the KTON Staking Dashboard! This decentralized finance (DeFi) application enables users to easily stake KTON tokens and earn rewards. With a user-friendly interface, it simplifies your interaction with various blockchain tokens, making DeFi more accessible.
+
+## Project Structure
+
+This project is organized as follows:
+
+- `.env` - Environment variables configuration
+- `.eslintrc.json` - ESLint configuration for code linting
+- `.gitignore` - Specifies intentionally untracked files to ignore
+- `.next/` - Next.js build output directory
+- `.prettierrc.cjs` - Prettier configuration for code formatting
+- `.vscode/` - VSCode specific settings
+  - `settings.json` - Editor configuration
+- `components.json` - Component configuration
+- `next.config.mjs` - Next.js configuration file
+- `package.json` - Defines npm package dependencies
+- `pnpm-lock.yaml` - Lock file for pnpm
+- `postcss.config.js` - PostCSS configuration for processing CSS
+- `public/` - Static files like images and icons
+- `README.md` - Project documentation
+- `src/` - Source code directory
+- `tailwind.config.ts` - Tailwind CSS configuration
+- `tsconfig.json` - TypeScript compiler configuration
 
 ## Getting Started
 
-First, run the development server:
+To set up the project:
+
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd <repository-name>
+   ```
+
+2. Install the dependencies using pnpm:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   pnpm run dev
+   ```
+
+4. Open http://localhost:3000 with your browser to see the result.
+
+## Building the Project
+
+After you have made changes to the project or if you wish to deploy it, you can build the project using:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This command generates a `.next` directory with your optimized production build. Next.js pre-renders your pages to static HTML, making it ready for deployment.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Starting the Project
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To start the project in production mode, run:
 
-## Learn More
+```bash
+pnpm start
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This command starts a Next.js production server that serves your built site on `http://localhost:3000`. Ensure you have run `pnpm run build` before starting the server in production mode.
