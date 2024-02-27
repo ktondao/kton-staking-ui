@@ -6,9 +6,9 @@ import { toast } from 'sonner';
 import { useApp } from './useApp';
 
 interface UseTokenAllowanceAndApproveProps {
-  tokenAddress: `0x${string}`; // 代币合约地址
-  ownerAddress: `0x${string}`; // 拥有者地址
-  spenderAddress: `0x${string}`; // 被授权者地址
+  tokenAddress: `0x${string}`;
+  ownerAddress: `0x${string}`;
+  spenderAddress: `0x${string}`;
 }
 
 export function useTokenAllowanceAndApprove({

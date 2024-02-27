@@ -13,7 +13,6 @@ import { validateNotGreaterThan } from '@/utils';
 
 const formSchema = z.object({
   amount: z.string().refine((v) => {
-    // 必须是正数
     const numberValue = Number(v);
     return !Number.isNaN(numberValue) && numberValue > 0;
   })
@@ -51,7 +50,6 @@ const KTONAction = forwardRef<Form, KTONActionProps>(
 
     const { watch, setError, clearErrors } = form;
 
-    // 使用watch来监控amount字段的值
     const watchedAmount = watch('amount');
 
     useEffect(() => {
@@ -70,7 +68,6 @@ const KTONAction = forwardRef<Form, KTONActionProps>(
       }
     }, [watchedAmount, etherBalance, setError, clearErrors, onAmountChange]);
 
-    // 自定义提交处理函数
     const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
       const isValid = validateNotGreaterThan(watchedAmount, etherBalance);
       if (!isValid) {

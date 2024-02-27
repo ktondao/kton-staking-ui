@@ -64,7 +64,6 @@ export function toFixed(value: number | string, fractionDigits: number): string 
     return value.toString();
   }
 
-  // 使用正则表达式处理数字的字符串表示形式
   const re = new RegExp(`^-?\\d+(?:\\.\\d{0,${fractionDigits}})?`);
   const match = num.toString().match(re);
   return match ? match[0] : value.toString();

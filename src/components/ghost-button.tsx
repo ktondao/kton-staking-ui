@@ -23,7 +23,7 @@ const GhostButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref
     'active:bg-transparent',
     'active:opacity-60',
     'md:gap-[0.625rem]',
-    props.className // 这样可以确保任何传递给 Button 组件的 className 都会被应用
+    props.className
   );
   return <BaseButton {...props} ref={ref} className={buttonClasses} />;
 });
