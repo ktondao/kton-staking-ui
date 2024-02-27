@@ -7,5 +7,6 @@
         "Unstake",
         "viem",
         "wagmi"
-    ]
+    ],
+    "github.copilot.chat.localeOverride": "en"
 }
