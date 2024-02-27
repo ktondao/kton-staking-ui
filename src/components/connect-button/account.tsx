@@ -1,5 +1,5 @@
 'use client';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useDisconnect } from 'wagmi';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
 import {
@@ -11,8 +11,10 @@ import {
 import Button from '@/components/ghost-button';
 import { toShortAddress } from '@/utils';
 
-const Account = () => {
-  const { address } = useAccount();
+type AccountProps = {
+  address: string;
+};
+const Account = ({ address }: AccountProps) => {
   const { disconnect } = useDisconnect();
 
   return address ? (

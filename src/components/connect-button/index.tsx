@@ -1,5 +1,4 @@
 'use client';
-
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 
@@ -10,7 +9,7 @@ import SwitchChain from './switch-chain';
 
 const ConnectButton = () => {
   const { openConnectModal } = useConnectModal();
-  const { address, isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   return (
     <div className="flex w-full items-center justify-between space-x-[1.25rem] md:w-auto md:justify-center">
@@ -18,7 +17,7 @@ const ConnectButton = () => {
         <Button onClick={openConnectModal}>Connect Wallet</Button>
       ) : null}
       {isConnected ? <SwitchChain /> : null}
-      {address ? <Account /> : null}
+      {address ? <Account address={address} /> : null}
     </div>
   );
 };
