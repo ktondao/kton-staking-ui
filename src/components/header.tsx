@@ -8,7 +8,7 @@ import ConnectButton from '@/components/connect-button';
 const Header = () => {
   return (
     <header className="h-12 w-full md:h-[3.5rem]">
-      <div className="container m-auto flex h-full items-center justify-between">
+      <div className="container flex h-full items-center justify-between">
         <Link href="/" title="darwinia" className="hidden md:inline ">
           <Image
             src={'/images/common/logo.png'}
