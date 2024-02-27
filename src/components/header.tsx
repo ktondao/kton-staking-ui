@@ -16,7 +16,7 @@ const Header = () => {
             loading="lazy"
             width={154}
             height={18}
-            className="h-[18px] w-[154px] flex-shrink-0"
+            className="h-[18px] w-[154px] shrink-0"
           />
         </Link>
         <ConnectButton />
