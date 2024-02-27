@@ -8,9 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import Button from '@/components/ghost-button';
 import { toShortAddress } from '@/utils';
-
-import Button from './button';
 
 const Account = () => {
   const { address } = useAccount();

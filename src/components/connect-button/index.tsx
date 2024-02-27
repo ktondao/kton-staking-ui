@@ -3,7 +3,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 
-import Button from '@/components/connect-button/button';
+import Button from '@/components/ghost-button';
 
 import Account from './account';
 import SwitchChain from './switch-chain';
