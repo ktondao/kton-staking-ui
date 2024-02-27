@@ -50,7 +50,7 @@ const KTONPool = () => {
                       {totalSupply?.integerPart}
                     </span>
                     {totalSupply?.decimalPart ? (
-                      <span className="text-[1.5rem] font-bold leading-normal text-[rgba(255,255,255,.5)]">
+                      <span className="text-[1.5rem] font-bold leading-normal text-white/50">
                         .{totalSupply?.decimalPart}
                       </span>
                     ) : null}
