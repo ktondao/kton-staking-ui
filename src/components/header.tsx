@@ -13,7 +13,6 @@ const Header = () => {
           <Image
             src={'/images/common/logo.png'}
             alt="darwinia logo"
-            loading="lazy"
             priority
             width={154}
             height={18}
