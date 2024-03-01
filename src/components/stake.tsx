@@ -1,7 +1,7 @@
 'use client';
 
 import { useAccount } from 'wagmi';
-import { erc20Abi, formatEther, parseEther } from 'viem';
+import { erc20Abi, parseEther } from 'viem';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -45,14 +45,14 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     refetchAllowance,
     approve,
     isApproving,
-    isApproveTransactionConfirming
+    isApproveTransactionConfirming,
+    needApprove
   } = useTokenAllowanceAndApprove({
     tokenAddress: activeChain?.ktonToken.address,
     ownerAddress: address!,
-    spenderAddress: activeChain?.stakingContractAddress
+    spenderAddress: activeChain?.stakingContractAddress,
+    amount
   });
-  console.log('amount', amount, formatEther(amount));
-  console.log('allowance', allowance, allowance && formatEther(allowance));
 
   const { stake, isStaking, isStakeTransactionConfirming } = useStake({
     ownerAddress: address!,
@@ -75,8 +75,6 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     isStakeTransactionConfirming,
     onTransactionActiveChange
   ]);
-
-  const needApprove = useMemo(() => !allowance || allowance < amount, [allowance, amount]);
 
   const buttonText = useMemo(() => {
     if (!isConnected) return 'Wallet Disconnected';
@@ -141,11 +139,15 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     >
       <Button
         disabled={
-          isAllowanceLoading || isBalanceLoading || !isConnected || !isCorrectChainId || !amount
+          isAllowanceLoading ||
+          isBalanceLoading ||
+          !isConnected ||
+          !isCorrectChainId ||
+          amount === 0n
         }
         type="submit"
         isLoading={
-          isApproving || isStaking || isApproveTransactionConfirming || isStakeTransactionConfirming
+          isApproving || isApproveTransactionConfirming || isStaking || isStakeTransactionConfirming
         }
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >

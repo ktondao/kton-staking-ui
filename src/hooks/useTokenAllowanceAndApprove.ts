@@ -1,4 +1,5 @@
 import { useAccount } from 'wagmi';
+import { useMemo } from 'react';
 
 import { useTokenAllowance } from './useTokenAllowance';
 import { useTokenApprove } from './useTokenApprove';
@@ -9,11 +10,13 @@ interface UseTokenAllowanceAndApproveProps {
   tokenAddress: `0x${string}`;
   ownerAddress: `0x${string}`;
   spenderAddress: `0x${string}`;
+  amount: bigint;
 }
 export const useTokenAllowanceAndApprove = ({
   tokenAddress,
   ownerAddress,
-  spenderAddress
+  spenderAddress,
+  amount
 }: UseTokenAllowanceAndApproveProps) => {
   const { isConnected } = useAccount();
   const { activeChainId } = useApp();
@@ -38,6 +41,7 @@ export const useTokenAllowanceAndApprove = ({
       approveData && refetchAllowance();
     }
   });
+  const needApprove = useMemo(() => !allowance || allowance < amount, [allowance, amount]);
 
   return {
     allowance,
@@ -45,6 +49,7 @@ export const useTokenAllowanceAndApprove = ({
     isAllowanceLoading,
     approve,
     isApproving,
-    isApproveTransactionConfirming
+    isApproveTransactionConfirming,
+    needApprove
   };
 };

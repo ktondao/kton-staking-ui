@@ -39,18 +39,19 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     if (!isCorrectChainId) {
       return 'Wrong Network';
     }
-    if (isLoading) {
-      return 'Preparing';
-    }
-    if (value === 0n) {
-      return 'No Rewards';
-    }
     if (isClaiming) {
       return 'Preparing Transaction';
     }
     if (isClaimTransactionConfirming) {
       return 'Confirming Transaction';
     }
+    if (isLoading) {
+      return 'Preparing';
+    }
+    if (value === 0n) {
+      return 'No Rewards';
+    }
+
     return 'Claim';
   }, [isConnected, isCorrectChainId, isLoading, value, isClaiming, isClaimTransactionConfirming]);
 
