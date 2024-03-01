@@ -121,7 +121,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
             etherBalance={ktonEtherBalance}
           />
         ) : (
-          '0 KTON'
+          `0 ${activeChain.ktonToken?.symbol}`
         )
       }
       onSubmit={handleSubmit}
