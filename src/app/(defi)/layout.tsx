@@ -14,7 +14,7 @@ const DefiLayout = ({ children }: PropsWithChildren) => {
   return (
     <div className="flex h-full w-full items-center justify-center px-10 ">
       <PoolProvider>
-        <div className="container flex flex-col items-center justify-center gap-[1.25rem] rounded-[1.25rem] bg-[#242A2E] p-[1.25rem] sm:w-[25rem]">
+        <div className="container flex flex-col items-center justify-center gap-5 rounded-lg bg-[#242A2E] p-5 sm:w-[25rem]">
           <KTONPool />
           {children}
         </div>

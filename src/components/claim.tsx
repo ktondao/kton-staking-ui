@@ -1,6 +1,6 @@
 'use client';
 import { useAccount } from 'wagmi';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, memo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useChain } from '@/hooks/useChain';
@@ -100,4 +100,4 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     </div>
   );
 };
-export default Claim;
+export default memo(Claim);

@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UseFormReturn, useForm } from 'react-hook-form';
-import { useEffect, forwardRef, useImperativeHandle, memo } from 'react';
+import { useEffect, forwardRef, useImperativeHandle, memo, useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,7 @@ const formSchema = z.object({
 
 export type SubmitData = z.infer<typeof formSchema>;
 
-interface KTONActionProps {
+interface AmountInputFormProps {
   onSubmit: (data: SubmitData) => void;
   etherBalance: string;
   children?: React.ReactNode;
@@ -39,7 +39,7 @@ export type Form = UseFormReturn<
   }
 >;
 
-const KTONAction = forwardRef<Form, KTONActionProps>(
+const AmountInputForm = forwardRef<Form, AmountInputFormProps>(
   ({ renderBalance, etherBalance, onSubmit, onAmountChange, children, className }, ref) => {
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
@@ -52,34 +52,37 @@ const KTONAction = forwardRef<Form, KTONActionProps>(
 
     const watchedAmount = watch('amount');
 
+    const validateAmount = useCallback((): boolean => {
+      const isValid = validateNotGreaterThan(watchedAmount, etherBalance);
+      if (!isValid) {
+        setError('amount', {
+          type: 'manual'
+        });
+        return false;
+      }
+      clearErrors('amount');
+      return true;
+    }, [watchedAmount, etherBalance, setError, clearErrors]);
+
     useEffect(() => {
       if (watchedAmount === '') {
         onAmountChange && onAmountChange(watchedAmount);
         return;
       }
-      const isValid = validateNotGreaterThan(watchedAmount, etherBalance);
-      if (!isValid) {
-        setError('amount', {
-          type: 'manual'
-        });
-      } else {
+      const isValid = validateAmount();
+      if (isValid) {
         onAmountChange && onAmountChange(watchedAmount);
-        clearErrors('amount');
       }
-    }, [watchedAmount, etherBalance, setError, clearErrors, onAmountChange]);
+    }, [watchedAmount, validateAmount, onAmountChange]);
 
-    const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
-      const isValid = validateNotGreaterThan(watchedAmount, etherBalance);
-      if (!isValid) {
-        setError('amount', {
-          type: 'manual'
-        });
-        return;
-      } else {
-        clearErrors('amount');
-      }
-      onSubmit(data);
-    };
+    const handleFormSubmit = useCallback(
+      (data: z.infer<typeof formSchema>) => {
+        const isValid = validateAmount();
+        isValid && onSubmit(data);
+      },
+      [validateAmount, onSubmit]
+    );
+
     useImperativeHandle(ref, () => form, [form]);
 
     return (
@@ -127,6 +130,6 @@ const KTONAction = forwardRef<Form, KTONActionProps>(
     );
   }
 );
-KTONAction.displayName = 'KTONAction';
+AmountInputForm.displayName = 'AmountInputForm';
 
-export default memo(KTONAction);
+export default memo(AmountInputForm);

@@ -14,6 +14,9 @@ import { toShortAddress } from '@/utils';
 type AccountProps = {
   address: string;
 };
+const styles = {
+  borderRadius: '50%'
+};
 const Account = ({ address }: AccountProps) => {
   const { disconnect } = useDisconnect();
 
@@ -21,13 +24,7 @@ const Account = ({ address }: AccountProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button>
-          <Jazzicon
-            diameter={24}
-            seed={jsNumberForAddress(address)}
-            svgStyles={{
-              borderRadius: '50%'
-            }}
-          />
+          <Jazzicon diameter={24} seed={jsNumberForAddress(address)} svgStyles={styles} />
           <span>{toShortAddress(address)?.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>

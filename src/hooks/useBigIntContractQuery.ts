@@ -1,16 +1,16 @@
 'use client';
 
 import { useMemo } from 'react';
-import { formatEther } from 'viem';
+import { Abi, ContractFunctionArgs, ContractFunctionName, formatEther } from 'viem';
 import { useReadContract, Config, useAccount } from 'wagmi';
 
 import { useChain } from './useChain';
 
 interface UseBigIntContractQueryProps {
-  abi: any;
+  abi: Abi;
   contractAddress: `0x${string}`;
-  functionName: string;
-  args?: any[];
+  functionName: ContractFunctionName<Abi, 'pure' | 'view'>;
+  args?: ContractFunctionArgs<Abi, 'pure' | 'view', ContractFunctionName<Abi, 'pure' | 'view'>>;
   forceEnabled?: boolean;
 }
 

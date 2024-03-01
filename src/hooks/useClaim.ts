@@ -14,11 +14,11 @@ import {
 } from './useTransactionStatus';
 import { useLatestCallback } from './useLatestCallback';
 
-interface useClaimProps extends Pick<UseTransactionStatusProps, 'onError' | 'onSuccess'> {
+interface ClaimProps extends Pick<UseTransactionStatusProps, 'onError' | 'onSuccess'> {
   ownerAddress: `0x${string}`;
 }
 
-export function useClaim({ ownerAddress, onError, onSuccess }: useClaimProps) {
+export function useClaim({ ownerAddress, onError, onSuccess }: ClaimProps) {
   const { activeChainId, activeChain } = useChain();
 
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);

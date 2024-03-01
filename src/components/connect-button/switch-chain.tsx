@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   DropdownMenu,
@@ -10,9 +10,10 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Button from '@/components/ui/ghost-button';
-import { ChainConfig } from '@/types/chains';
 import { useChain } from '@/hooks/useChain';
-import { getChainById, getChains } from '@/utils/chain';
+import { getChains } from '@/utils/chain';
+
+import type { ChainConfig } from '@/types/chains';
 
 const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {
   const [mounted, setMounted] = useState(false);
@@ -41,9 +42,7 @@ const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {
 const SwitchChain = () => {
   const [open, setOpen] = useState(false);
   const chains = getChains();
-  const { activeChainId, switchChain } = useChain();
-
-  const activeChain = useMemo(() => getChainById(activeChainId), [activeChainId]);
+  const { activeChainId, activeChain, switchChain } = useChain();
 
   return chains?.length && activeChain ? (
     <DropdownMenu onOpenChange={setOpen}>

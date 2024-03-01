@@ -10,10 +10,10 @@ import { useStakedKTONAmount } from '@/hooks/useStakedKTONAmount';
 import { useUnStake } from '@/hooks/useUnStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 
-import KTONAction from './kton-action';
+import AmountInputForm from './amount-input-form';
 import KTONBalance from './kton-balance';
 
-import type { Form, SubmitData } from './kton-action';
+import type { Form, SubmitData } from './amount-input-form';
 
 type UnStakeProps = {
   onTransactionActiveChange?: (isTransaction: boolean) => void;
@@ -93,7 +93,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
   }, [isUnStaking, isUnstakeTransactionConfirming, onTransactionActiveChange]);
 
   return (
-    <KTONAction
+    <AmountInputForm
       ref={formRef}
       key="stake"
       etherBalance={ktonEtherAmount}
@@ -119,7 +119,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
       >
         {isAmountLoading ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
-    </KTONAction>
+    </AmountInputForm>
   );
 };
 export default UnStake;

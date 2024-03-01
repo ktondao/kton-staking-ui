@@ -13,10 +13,10 @@ import { useStake } from '@/hooks/useStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 import { useStakeState } from '@/hooks/useStakeState';
 
-import KTONAction from './kton-action';
+import AmountInputForm from './amount-input-form';
 import KTONBalance from './kton-balance';
 
-import type { Form, SubmitData } from './kton-action';
+import type { Form, SubmitData } from './amount-input-form';
 
 type StakeProps = {
   onTransactionActiveChange?: (isTransaction: boolean) => void;
@@ -109,7 +109,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   );
 
   return (
-    <KTONAction
+    <AmountInputForm
       ref={formRef}
       key="stake"
       etherBalance={ktonEtherBalance}
@@ -141,7 +141,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
           buttonText
         )}
       </Button>
-    </KTONAction>
+    </AmountInputForm>
   );
 };
 export default Stake;

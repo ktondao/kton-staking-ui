@@ -21,7 +21,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="transition hover:opacity-80 active:scale-95 active:opacity-60"
             >
-              <Image src={iconPath} width={20} height={20} alt={`${name} icon`} />
+              <Image src={iconPath} width={20} height={20} alt={`${name} icon`} loading="lazy" />
             </a>
           ))}
         </div>
