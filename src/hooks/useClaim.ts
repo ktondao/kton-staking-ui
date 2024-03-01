@@ -4,7 +4,7 @@ import { WriteContractReturnType } from 'viem';
 
 import { abi } from '@/config/abi/KTONStakingRewards';
 
-import { useApp } from './useApp';
+import { useChain } from './useChain';
 import { useWalletInteractionToast } from './useWalletInteractionToast';
 import {
   ErrorType,
@@ -19,7 +19,7 @@ interface useClaimProps extends Pick<UseTransactionStatusProps, 'onError' | 'onS
 }
 
 export function useClaim({ ownerAddress, onError, onSuccess }: useClaimProps) {
-  const { activeChainId, activeChain } = useApp();
+  const { activeChainId, activeChain } = useChain();
 
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
   const onErrorLatest = useLatestCallback<ErrorType>(onError);

@@ -2,4 +2,4 @@ import { useContext } from 'react';
 
 import { ChainContext } from '@/providers/chain-provider';
 
-export const useApp = () => useContext(ChainContext);
+export const useChain = () => useContext(ChainContext);

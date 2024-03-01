@@ -3,7 +3,7 @@
 import React, { createContext } from 'react';
 
 import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
-import { useApp } from '@/hooks/useApp';
+import { useChain } from '@/hooks/useChain';
 import { abi } from '@/config/abi/KTONStakingRewards';
 
 export type PoolProviderType = {
@@ -20,8 +20,8 @@ export const PoolContext = createContext<PoolProviderType>({
   refetch: () => {}
 });
 
-export const PoolProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const { activeChain } = useApp();
+export const PoolProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const { activeChain } = useChain();
 
   const { value, formatted, isLoading, refetch } = useBigIntContractQuery({
     contractAddress: activeChain?.stakingContractAddress,

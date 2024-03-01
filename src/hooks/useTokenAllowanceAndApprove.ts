@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useTokenAllowance } from './useTokenAllowance';
 import { useTokenApprove } from './useTokenApprove';
 import { useTransactionStatus } from './useTransactionStatus';
-import { useApp } from './useApp';
+import { useChain } from './useChain';
 
 interface UseTokenAllowanceAndApproveProps {
   tokenAddress: `0x${string}`;
@@ -19,7 +19,7 @@ export const useTokenAllowanceAndApprove = ({
   amount
 }: UseTokenAllowanceAndApproveProps) => {
   const { isConnected } = useAccount();
-  const { activeChainId } = useApp();
+  const { activeChainId } = useChain();
 
   const { isAllowanceLoading, allowance, refetchAllowance } = useTokenAllowance({
     tokenAddress,

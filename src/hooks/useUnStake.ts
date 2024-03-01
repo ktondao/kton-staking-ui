@@ -4,7 +4,7 @@ import { WriteContractReturnType, parseEther } from 'viem';
 
 import { abi } from '@/config/abi/KTONStakingRewards';
 
-import { useApp } from './useApp';
+import { useChain } from './useChain';
 import { useWalletInteractionToast } from './useWalletInteractionToast';
 import {
   ErrorType,
@@ -19,7 +19,7 @@ interface UseUnStakeProps extends Pick<UseTransactionStatusProps, 'onError' | 'o
 }
 
 export function useUnStake({ ownerAddress, onError, onSuccess }: UseUnStakeProps) {
-  const { activeChainId, activeChain } = useApp();
+  const { activeChainId, activeChain } = useChain();
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
   const onErrorLatest = useLatestCallback<ErrorType>(onError);
 

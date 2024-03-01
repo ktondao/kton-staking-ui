@@ -6,7 +6,7 @@ import { WaitForTransactionReceiptData } from 'wagmi/query';
 import { ChainId } from '@/types/chains';
 import { getChainById } from '@/utils';
 
-import { useApp } from './useApp';
+import { useChain } from './useChain';
 import { useLatestCallback } from './useLatestCallback';
 
 export type SuccessType = (data: WaitForTransactionReceiptData<Config, ChainId>) => void;
@@ -18,7 +18,7 @@ export interface UseTransactionStatusProps {
 }
 
 export function useTransactionStatus({ hash, onSuccess, onError }: UseTransactionStatusProps) {
-  const { activeChainId } = useApp();
+  const { activeChainId } = useChain();
   const { data, isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
     hash,
     chainId: activeChainId

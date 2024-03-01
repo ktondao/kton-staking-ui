@@ -5,7 +5,7 @@ import { WriteContractReturnType, parseEther } from 'viem';
 import { abi } from '@/config/abi/KTONStakingRewards';
 
 import { useWalletInteractionToast } from './useWalletInteractionToast';
-import { useApp } from './useApp';
+import { useChain } from './useChain';
 import {
   UseTransactionStatusProps,
   SuccessType,
@@ -19,7 +19,7 @@ interface UseStakeProps extends Pick<UseTransactionStatusProps, 'onError' | 'onS
 }
 
 export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
-  const { activeChainId, activeChain } = useApp();
+  const { activeChainId, activeChain } = useChain();
 
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
   const onErrorLatest = useLatestCallback<ErrorType>(onError);

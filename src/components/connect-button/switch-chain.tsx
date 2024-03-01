@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Button from '@/components/ui/ghost-button';
 import { ChainConfig } from '@/types/chains';
-import { useApp } from '@/hooks/useApp';
+import { useChain } from '@/hooks/useChain';
 import { getChainById, getChains } from '@/utils/chain';
 
 const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {
@@ -41,7 +41,7 @@ const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {
 const SwitchChain = () => {
   const [open, setOpen] = useState(false);
   const chains = getChains();
-  const { activeChainId, switchChain } = useApp();
+  const { activeChainId, switchChain } = useChain();
 
   const activeChain = useMemo(() => getChainById(activeChainId), [activeChainId]);
 

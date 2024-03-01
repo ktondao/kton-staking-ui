@@ -3,14 +3,14 @@
 import { abi } from '@/config/abi/KTONStakingRewards';
 
 import { useBigIntContractQuery } from './useBigIntContractQuery';
-import { useApp } from './useApp';
+import { useChain } from './useChain';
 
 interface UseStakedKTONAmountProps {
   ownerAddress: `0x${string}`;
 }
 
 export const useStakedKTONAmount = ({ ownerAddress }: UseStakedKTONAmountProps) => {
-  const { activeChain } = useApp();
+  const { activeChain } = useChain();
 
   const { value, formatted, isLoading, refetch } = useBigIntContractQuery({
     contractAddress: activeChain.stakingContractAddress,

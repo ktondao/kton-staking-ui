@@ -5,7 +5,7 @@ import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } f
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useApp } from '@/hooks/useApp';
+import { useChain } from '@/hooks/useChain';
 import { useStakedKTONAmount } from '@/hooks/useStakedKTONAmount';
 import { useUnStake } from '@/hooks/useUnStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
@@ -22,7 +22,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
   const formRef: MutableRefObject<Form | null> = useRef(null);
   const [amount, setAmount] = useState<bigint>(0n);
   const { address, isConnected } = useAccount();
-  const { activeChain, isCorrectChainId } = useApp();
+  const { activeChain, isCorrectChainId } = useChain();
 
   const { refetch: refetchPoolAmount } = usePoolAmount();
 

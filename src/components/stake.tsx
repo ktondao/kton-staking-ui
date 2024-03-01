@@ -6,7 +6,7 @@ import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'reac
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useApp } from '@/hooks/useApp';
+import { useChain } from '@/hooks/useChain';
 import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
 import { useTokenAllowanceAndApprove } from '@/hooks/useTokenAllowanceAndApprove';
 import { useStake } from '@/hooks/useStake';
@@ -26,7 +26,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const [amount, setAmount] = useState<bigint>(0n);
 
   const { address, isConnected } = useAccount();
-  const { activeChain, isCorrectChainId } = useApp();
+  const { activeChain, isCorrectChainId } = useChain();
   const { refetch: refetchPoolAmount } = usePoolAmount();
 
   const {

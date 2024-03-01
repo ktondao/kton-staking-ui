@@ -5,12 +5,12 @@ import { useMemo } from 'react';
 
 import Loading from '@/components/loading';
 import { formatNumericValue } from '@/utils';
-import { useApp } from '@/hooks/useApp';
+import { useChain } from '@/hooks/useChain';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 
 const KTONPool = () => {
-  const { activeChain } = useApp();
+  const { activeChain } = useChain();
   const { isLoading, formatted } = usePoolAmount();
 
   const totalSupply = useMemo(() => {

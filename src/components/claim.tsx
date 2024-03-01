@@ -3,7 +3,7 @@ import { useAccount } from 'wagmi';
 import { useEffect, useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { useApp } from '@/hooks/useApp';
+import { useChain } from '@/hooks/useChain';
 import Loading from '@/components/loading';
 import { formatNumericValue } from '@/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -15,7 +15,7 @@ type ClaimProps = {
 };
 const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   const { address, isConnected } = useAccount();
-  const { isCorrectChainId } = useApp();
+  const { isCorrectChainId } = useChain();
 
   const { isLoading, value, formatted, refetch } = useRingRewardAmount({
     ownerAddress: address!

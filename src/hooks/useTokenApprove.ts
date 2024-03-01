@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { useWriteContract } from 'wagmi';
 import { erc20Abi, parseEther } from 'viem';
 
-import { useApp } from './useApp';
 import { useWalletInteractionToast } from './useWalletInteractionToast';
 
 import type { ChainId } from '@/types/chains';
