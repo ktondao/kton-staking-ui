@@ -41,7 +41,7 @@ const DefiTabs = () => {
 
   return (
     <Tabs defaultValue={defaultValue} className="w-full" value={value}>
-      <TabsList className="flex h-[1.5rem] items-center justify-start gap-[1.25rem] self-stretch bg-transparent ">
+      <TabsList className="flex h-[1.5rem] items-center justify-start gap-[1.25rem] self-stretch bg-transparent">
         {menuItems.map((item) => (
           <TabsTrigger
             asChild

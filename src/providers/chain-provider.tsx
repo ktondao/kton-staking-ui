@@ -116,11 +116,9 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
           {
             duration: 0,
             onAutoClose: () => {
-              console.log('onAutoClose');
               toastRef.current = null;
             },
             onDismiss: () => {
-              console.log('onDismiss');
               toastRef.current = null;
             }
           }
