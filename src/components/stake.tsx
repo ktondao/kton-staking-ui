@@ -2,7 +2,7 @@
 
 import { useAccount } from 'wagmi';
 import { erc20Abi, parseEther } from 'viem';
-import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
 import { useTokenAllowanceAndApprove } from '@/hooks/useTokenAllowanceAndApprove';
 import { useStake } from '@/hooks/useStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
+import { useStakeState } from '@/hooks/useStakeState';
 
 import KTONAction from './kton-action';
 import KTONBalance from './kton-balance';
@@ -40,7 +41,6 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   });
 
   const {
-    allowance,
     isAllowanceLoading,
     refetchAllowance,
     approve,
@@ -64,6 +64,19 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     }
   });
 
+  const { isButtonDisabled, buttonText } = useStakeState({
+    isConnected,
+    isCorrectChainId,
+    isBalanceLoading,
+    isAllowanceLoading,
+    needApprove,
+    isApproving,
+    isApproveTransactionConfirming,
+    isStaking,
+    isStakeTransactionConfirming,
+    amount
+  });
+
   useEffect(() => {
     const isActive =
       isApproving || isStaking || isApproveTransactionConfirming || isStakeTransactionConfirming;
@@ -74,29 +87,6 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     isApproveTransactionConfirming,
     isStakeTransactionConfirming,
     onTransactionActiveChange
-  ]);
-
-  const buttonText = useMemo(() => {
-    if (!isConnected) return 'Wallet Disconnected';
-    if (!isCorrectChainId) return 'Wrong Network';
-    if (isApproving) return 'Preparing Approval';
-    if (isApproveTransactionConfirming) return 'Confirming Approval';
-    if (isStaking) return 'Preparing Transaction';
-    if (isStakeTransactionConfirming) return 'Confirming Transaction';
-    if (isBalanceLoading || isAllowanceLoading) return 'Preparing...';
-    if (amount === 0n) return 'Enter Amount';
-    return needApprove ? 'Approve' : 'Stake';
-  }, [
-    isConnected,
-    isCorrectChainId,
-    isBalanceLoading,
-    isAllowanceLoading,
-    needApprove,
-    isApproving,
-    isApproveTransactionConfirming,
-    isStakeTransactionConfirming,
-    isStaking,
-    amount
   ]);
 
   const handleAmountChange = useCallback((amount: string) => {
@@ -138,13 +128,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
       onAmountChange={handleAmountChange}
     >
       <Button
-        disabled={
-          isAllowanceLoading ||
-          isBalanceLoading ||
-          !isConnected ||
-          !isCorrectChainId ||
-          amount === 0n
-        }
+        disabled={isButtonDisabled}
         type="submit"
         isLoading={
           isApproving || isApproveTransactionConfirming || isStaking || isStakeTransactionConfirming
