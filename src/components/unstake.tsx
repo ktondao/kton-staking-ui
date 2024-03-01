@@ -1,9 +1,8 @@
 'use client';
 import { useAccount } from 'wagmi';
 import { parseEther } from 'viem';
-import { MutableRefObject, useCallback, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useTokenAllowanceAndApprove } from '@/hooks/useTokenAllowanceAndApprove';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/hooks/useApp';
@@ -17,7 +16,10 @@ import KTONBalance from './kton-balance';
 
 import type { Form, SubmitData } from './kton-action';
 
-const UnStake = () => {
+type UnStakeProps = {
+  onTransactionActiveChange?: (isTransaction: boolean) => void;
+};
+const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
   const formRef: MutableRefObject<Form | null> = useRef(null);
   const [amount, setAmount] = useState<bigint>(0n);
   const { address, isConnected } = useAccount();
@@ -33,46 +35,34 @@ const UnStake = () => {
     ownerAddress: address!
   });
 
-  const { allowance, isAllowanceLoading, approve, isApproving, approveData } =
-    useTokenAllowanceAndApprove({
-      tokenAddress: activeChain?.ktonToken.address,
-      ownerAddress: address!,
-      spenderAddress: activeChain?.stakingContractAddress
-    });
-
   const { unStake, isUnStaking, unStakeData } = useUnStake({
     ownerAddress: address!
   });
 
   const { isLoading: isTransactionConfirming } = useTransactionStatus({
-    hash: approveData || unStakeData,
+    hash: unStakeData,
     onSuccess: () => {
       if (unStakeData) {
         refetch();
         refetchPoolAmount();
+        formRef.current?.setValue('amount', '');
       }
     }
   });
 
-  const needApprove = !allowance || allowance < amount;
-
   const handleAmountChange = useCallback((amount: string) => {
     if (amount) {
       setAmount(parseEther(amount));
+    } else {
+      setAmount(0n);
     }
   }, []);
 
   const handleSubmit = useCallback(
     (data: SubmitData) => {
-      if (needApprove) {
-        approve(data.amount);
-      } else {
-        unStake(data.amount)?.finally(() => {
-          formRef.current?.setValue('amount', '');
-        });
-      }
+      unStake(data.amount);
     },
-    [approve, needApprove, unStake]
+    [unStake]
   );
 
   const buttonText = useMemo(() => {
@@ -82,33 +72,32 @@ const UnStake = () => {
     if (!isCorrectChainId) {
       return 'Wrong Network';
     }
-    if (isAmountLoading || isAllowanceLoading) {
-      return 'Preparing...';
-    }
-    if (amount === 0n) {
-      return 'Enter Amount';
-    }
-    if (needApprove) {
-      return 'Approve';
-    }
-    if (isApproving || isUnStaking) {
+    if (isUnStaking) {
       return 'Preparing Transaction';
     }
     if (isTransactionConfirming) {
       return 'Confirming Transaction';
+    }
+    if (isAmountLoading) {
+      return 'Preparing';
+    }
+    if (amount === 0n) {
+      return 'Enter Amount';
     }
     return 'Unstake';
   }, [
     isConnected,
     isCorrectChainId,
     isAmountLoading,
-    isAllowanceLoading,
-    needApprove,
-    isApproving,
     isTransactionConfirming,
     isUnStaking,
     amount
   ]);
+
+  useEffect(() => {
+    const isActive = isUnStaking || isTransactionConfirming;
+    onTransactionActiveChange && onTransactionActiveChange(isActive);
+  }, [isUnStaking, isTransactionConfirming, onTransactionActiveChange]);
 
   return (
     <KTONAction
@@ -130,18 +119,12 @@ const UnStake = () => {
       onAmountChange={handleAmountChange}
     >
       <Button
-        disabled={
-          isAllowanceLoading || !isConnected || !isAmountLoading || !isCorrectChainId || !amount
-        }
+        disabled={!isConnected || isAmountLoading || !isCorrectChainId || !amount}
         type="submit"
-        isLoading={isApproving || isUnStaking}
+        isLoading={isUnStaking || isTransactionConfirming}
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
-        {isAllowanceLoading || isAmountLoading ? (
-          <span className=" animate-pulse"> {buttonText}</span>
-        ) : (
-          buttonText
-        )}
+        {isAmountLoading ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
     </KTONAction>
   );

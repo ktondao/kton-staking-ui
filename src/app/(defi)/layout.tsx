@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
 
 import { PoolProvider } from '@/providers/pool-provider';
-import DefiTabs from '@/components/defi-tabs';
 import KTONPoolLoading from '@/components/kton-pool-loading';
 
 import type { PropsWithChildren } from 'react';
@@ -17,7 +16,7 @@ const DefiLayout = ({ children }: PropsWithChildren) => {
       <PoolProvider>
         <div className="container flex flex-col items-center justify-center gap-[1.25rem] rounded-[1.25rem] bg-[#242A2E] p-[1.25rem] sm:w-[25rem]">
           <KTONPool />
-          <DefiTabs>{children}</DefiTabs>
+          {children}
         </div>
       </PoolProvider>
     </div>

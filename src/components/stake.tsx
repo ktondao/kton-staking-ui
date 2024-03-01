@@ -1,7 +1,8 @@
 'use client';
+
 import { useAccount } from 'wagmi';
 import { erc20Abi, parseEther } from 'viem';
-import { MutableRefObject, useCallback, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useTokenAllowanceAndApprove } from '@/hooks/useTokenAllowanceAndApprove';
 import { cn } from '@/lib/utils';
@@ -17,13 +18,17 @@ import KTONBalance from './kton-balance';
 
 import type { Form, SubmitData } from './kton-action';
 
-const Stake = () => {
+type StakeProps = {
+  onTransactionActiveChange?: (isTransaction: boolean) => void;
+};
+const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const formRef: MutableRefObject<Form | null> = useRef(null);
   const [amount, setAmount] = useState<bigint>(0n);
+
   const { address, isConnected } = useAccount();
   const { activeChain, isCorrectChainId } = useApp();
-
   const { refetch: refetchPoolAmount } = usePoolAmount();
+
   const {
     isLoading: isBalanceLoading,
     formatted: ktonEtherBalance,
@@ -35,7 +40,7 @@ const Stake = () => {
     args: [address]
   });
 
-  const { allowance, isAllowanceLoading, approve, isApproving, approveData } =
+  const { allowance, isAllowanceLoading, refetchAllowance, approve, isApproving, approveData } =
     useTokenAllowanceAndApprove({
       tokenAddress: activeChain?.ktonToken.address,
       ownerAddress: address!,
@@ -46,21 +51,67 @@ const Stake = () => {
     ownerAddress: address!
   });
 
-  const { isLoading: isTransactionConfirming } = useTransactionStatus({
-    hash: approveData || stakeData,
+  const { isLoading: isApproveTransactionConfirming } = useTransactionStatus({
+    hash: approveData,
+    onSuccess: () => {
+      approveData && refetchAllowance();
+    }
+  });
+
+  const { isLoading: isStakeTransactionConfirming } = useTransactionStatus({
+    hash: stakeData,
     onSuccess: () => {
       if (stakeData) {
         refetch();
+        refetchAllowance();
         refetchPoolAmount();
+        formRef.current?.setValue('amount', '');
       }
     }
   });
 
-  const needApprove = !allowance || allowance < amount;
+  useEffect(() => {
+    const isActive =
+      isApproving || isStaking || isApproveTransactionConfirming || isStakeTransactionConfirming;
+    onTransactionActiveChange && onTransactionActiveChange(isActive);
+  }, [
+    isApproving,
+    isStaking,
+    isApproveTransactionConfirming,
+    isStakeTransactionConfirming,
+    onTransactionActiveChange
+  ]);
+
+  const needApprove = useMemo(() => !allowance || allowance < amount, [allowance, amount]);
+
+  const buttonText = useMemo(() => {
+    if (!isConnected) return 'Wallet Disconnected';
+    if (!isCorrectChainId) return 'Wrong Network';
+    if (isApproving) return 'Preparing Approval';
+    if (isApproveTransactionConfirming) return 'Confirming Approval';
+    if (isStaking) return 'Preparing Transaction';
+    if (isStakeTransactionConfirming) return 'Confirming Transaction';
+    if (isBalanceLoading || isAllowanceLoading) return 'Preparing...';
+    if (amount === 0n) return 'Enter Amount';
+    return needApprove ? 'Approve' : 'Stake';
+  }, [
+    isConnected,
+    isCorrectChainId,
+    isBalanceLoading,
+    isAllowanceLoading,
+    needApprove,
+    isApproving,
+    isApproveTransactionConfirming,
+    isStakeTransactionConfirming,
+    isStaking,
+    amount
+  ]);
 
   const handleAmountChange = useCallback((amount: string) => {
     if (amount) {
       setAmount(parseEther(amount));
+    } else {
+      setAmount(0n);
     }
   }, []);
 
@@ -69,48 +120,11 @@ const Stake = () => {
       if (needApprove) {
         approve(data.amount);
       } else {
-        stake(data.amount)?.finally(() => {
-          formRef.current?.setValue('amount', '');
-        });
+        stake(data.amount);
       }
     },
     [approve, needApprove, stake]
   );
-
-  const buttonText = useMemo(() => {
-    if (!isConnected) {
-      return 'Wallet Disconnected';
-    }
-    if (!isCorrectChainId) {
-      return 'Wrong Network';
-    }
-    if (isBalanceLoading || isAllowanceLoading) {
-      return 'Preparing...';
-    }
-    if (amount === 0n) {
-      return 'Enter Amount';
-    }
-    if (needApprove) {
-      return 'Approve';
-    }
-    if (isApproving || isStaking) {
-      return 'Preparing Transaction';
-    }
-    if (isTransactionConfirming) {
-      return 'Confirming Transaction';
-    }
-    return 'Stake';
-  }, [
-    isConnected,
-    isCorrectChainId,
-    isBalanceLoading,
-    isAllowanceLoading,
-    needApprove,
-    isApproving,
-    isTransactionConfirming,
-    isStaking,
-    amount
-  ]);
 
   return (
     <KTONAction
@@ -136,7 +150,9 @@ const Stake = () => {
           isAllowanceLoading || isBalanceLoading || !isConnected || !isCorrectChainId || !amount
         }
         type="submit"
-        isLoading={isApproving || isStaking}
+        isLoading={
+          isApproving || isStaking || isApproveTransactionConfirming || isStakeTransactionConfirming
+        }
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
         {isAllowanceLoading || isBalanceLoading ? (

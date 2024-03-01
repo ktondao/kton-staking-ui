@@ -44,6 +44,10 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
     (chainId: ChainId) => {
       setActiveChainId(chainId);
       setItem(CHAIN_ID_KEY, chainId as unknown as string);
+      if (toastRef.current) {
+        toast.dismiss(toastRef.current);
+        toastRef.current = null;
+      }
     },
     [setActiveChainId]
   );

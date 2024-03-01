@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { useWriteContract } from 'wagmi';
 import { WriteContractReturnType, parseEther } from 'viem';
-import { toast } from 'sonner';
 
 import { abi } from '@/config/abi/KTONStakingRewards';
 
 import { useApp } from './useApp';
+import { useWalletInteractionToast } from './useWalletInteractionToast';
 
 interface UseUnStakeProps {
   ownerAddress: `0x${string}`;
@@ -13,7 +13,6 @@ interface UseUnStakeProps {
 
 export function useUnStake({ ownerAddress }: UseUnStakeProps) {
   const { activeChainId, activeChain } = useApp();
-  const toastRef = useRef<string | number | null>(null);
 
   const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
     useWriteContract();
@@ -32,27 +31,11 @@ export function useUnStake({ ownerAddress }: UseUnStakeProps) {
     [activeChain?.stakingContractAddress, activeChainId, ownerAddress, writeContractAsync]
   );
 
-  useEffect(() => {
-    if (isError) {
-      toastRef.current = toast(failureReason?.message || 'Stake failed', {
-        duration: 5000,
-        classNames: {
-          toast: 'group-[.toaster]:border-red-500',
-          closeButton: 'group-[.toast]:bg-red-500 group-[.toast]:border-red-500'
-        }
-      });
-    }
-    if (isSuccess) {
-      if (toastRef.current) {
-        toast.dismiss(toastRef.current);
-      }
-    }
-    return () => {
-      if (toastRef.current) {
-        toast.dismiss(toastRef.current);
-      }
-    };
-  }, [isError, isSuccess, failureReason]);
+  useWalletInteractionToast({
+    isError,
+    isSuccess,
+    failureReason
+  });
 
   return {
     unStake,

@@ -1,6 +1,6 @@
 'use client';
 import { useAccount } from 'wagmi';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/hooks/useApp';
@@ -11,7 +11,10 @@ import { useClaim } from '@/hooks/useClaim';
 import { useTransactionStatus } from '@/hooks/useTransactionStatus';
 import { useRingRewardAmount } from '@/hooks/useRingRewardAmount';
 
-const Claim = () => {
+type ClaimProps = {
+  onTransactionActiveChange?: (isTransaction: boolean) => void;
+};
+const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   const { address, isConnected } = useAccount();
   const { isCorrectChainId } = useApp();
 
@@ -26,7 +29,7 @@ const Claim = () => {
   const { isLoading: isTransactionConfirming } = useTransactionStatus({
     hash: claimData,
     onSuccess() {
-      refetch();
+      claimData && refetch();
     }
   });
 
@@ -42,7 +45,7 @@ const Claim = () => {
       return 'Wrong Network';
     }
     if (isLoading) {
-      return 'Preparing...';
+      return 'Preparing';
     }
     if (value === 0n) {
       return 'No Rewards';
@@ -55,6 +58,11 @@ const Claim = () => {
     }
     return 'Claim';
   }, [isConnected, isCorrectChainId, isLoading, value, isClaiming, isTransactionConfirming]);
+
+  useEffect(() => {
+    const isActive = isClaiming || isTransactionConfirming;
+    onTransactionActiveChange && onTransactionActiveChange(isActive);
+  }, [isClaiming, isTransactionConfirming, onTransactionActiveChange]);
 
   return (
     <div>
