@@ -6,6 +6,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { ChainProvider } from '@/providers/chain-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { AppProvider } from '@/providers/app-provider';
 
 import type { Metadata } from 'next';
 
@@ -29,12 +30,14 @@ export default function RootLayout({
       <body className={fontJetBrainsMono.className}>
         <Web3AppProvider>
           <ChainProvider>
-            <div className="flex h-dvh w-screen flex-col overflow-hidden lg:h-screen">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-            <Toaster position="top-right" duration={5000} />
+            <AppProvider>
+              <div className="flex h-dvh w-screen flex-col overflow-hidden lg:h-screen">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+              <Toaster position="top-right" duration={5000} />
+            </AppProvider>
           </ChainProvider>
         </Web3AppProvider>
       </body>

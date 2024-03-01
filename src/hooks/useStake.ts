@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useWriteContract } from 'wagmi';
 import { WriteContractReturnType, parseEther } from 'viem';
 
@@ -13,6 +13,7 @@ import {
   useTransactionStatus
 } from './useTransactionStatus';
 import { useLatestCallback } from './useLatestCallback';
+import { useAppState, getOperationStatus } from './useAppState';
 
 interface UseStakeProps extends Pick<UseTransactionStatusProps, 'onError' | 'onSuccess'> {
   ownerAddress: `0x${string}`;
@@ -20,6 +21,7 @@ interface UseStakeProps extends Pick<UseTransactionStatusProps, 'onError' | 'onS
 
 export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
   const { activeChainId, activeChain } = useChain();
+  const { operationStatusMap, updateOperationStatus } = useAppState();
 
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
   const onErrorLatest = useLatestCallback<ErrorType>(onError);
@@ -29,6 +31,7 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
 
   const stake = useCallback(
     async (amount: string): Promise<WriteContractReturnType> => {
+      updateOperationStatus('stake', 1);
       return await writeContractAsync({
         chainId: activeChainId,
         abi,
@@ -36,20 +39,37 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
         account: ownerAddress!,
         functionName: 'stake',
         args: [parseEther(amount)]
+      })?.catch((data) => {
+        updateOperationStatus('stake', 0);
+        return data;
       });
     },
-    [activeChain?.stakingContractAddress, activeChainId, ownerAddress, writeContractAsync]
+    [
+      activeChain?.stakingContractAddress,
+      activeChainId,
+      ownerAddress,
+      writeContractAsync,
+      updateOperationStatus
+    ]
   );
 
   const { isLoading: isStakeTransactionConfirming } = useTransactionStatus({
     hash: data,
     onSuccess: (data) => {
+      updateOperationStatus('stake', 0);
       if (data) {
         onSuccessLatest?.(data);
       }
     },
-    onError: onErrorLatest ?? (() => null)
+    onError: () => {
+      updateOperationStatus('stake', 0);
+      onErrorLatest ?? (() => null);
+    }
   });
+
+  const isStakeAvailable = useMemo(() => {
+    return getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'stake') === 1;
+  }, [operationStatusMap, ownerAddress, activeChainId]);
 
   useWalletInteractionToast({
     isError,
@@ -59,11 +79,11 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
 
   return {
     stake,
-    isStaking: isPending,
+    isStaking: isStakeAvailable && isPending,
     stakeData: data,
     isStakeSuccess: isSuccess,
     isStakeError: isError,
     skateFailureReason: failureReason,
-    isStakeTransactionConfirming
+    isStakeTransactionConfirming: isStakeAvailable && isStakeTransactionConfirming
   };
 }

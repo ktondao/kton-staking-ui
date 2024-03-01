@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { useWriteContract } from 'wagmi';
-import { erc20Abi, parseEther } from 'viem';
+import { WriteContractReturnType, erc20Abi, parseEther } from 'viem';
 
 import { useWalletInteractionToast } from './useWalletInteractionToast';
+import { useAppState } from './useAppState';
 
 import type { ChainId } from '@/types/chains';
 
@@ -17,19 +18,25 @@ export function useTokenApprove({
   spenderAddress,
   activeChainId
 }: UseTokenApproveProps) {
-  const { writeContract, isPending, isError, isSuccess, failureReason, data } = useWriteContract();
+  const { updateOperationStatus } = useAppState();
+  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
+    useWriteContract();
 
   const approve = useCallback(
-    (amount: string): void => {
-      writeContract({
+    async (amount: string): Promise<WriteContractReturnType> => {
+      updateOperationStatus('approve', 1);
+      return await writeContractAsync({
         chainId: activeChainId,
         abi: erc20Abi,
         address: tokenAddress,
         functionName: 'approve',
         args: [spenderAddress, parseEther(amount)]
+      })?.catch((data) => {
+        updateOperationStatus('approve', 0);
+        return data;
       });
     },
-    [tokenAddress, activeChainId, spenderAddress, writeContract]
+    [tokenAddress, activeChainId, spenderAddress, writeContractAsync, updateOperationStatus]
   );
 
   useWalletInteractionToast({

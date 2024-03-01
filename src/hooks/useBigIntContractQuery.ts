@@ -37,7 +37,9 @@ export const useBigIntContractQuery = ({
     functionName,
     args,
     query: {
-      enabled: forceEnabled ? true : isConnected
+      enabled: forceEnabled ? true : isConnected,
+      networkMode: 'offlineFirst',
+      refetchOnWindowFocus: false
     }
   });
 

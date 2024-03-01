@@ -5,6 +5,7 @@ import { useTokenAllowance } from './useTokenAllowance';
 import { useTokenApprove } from './useTokenApprove';
 import { useTransactionStatus } from './useTransactionStatus';
 import { useChain } from './useChain';
+import { getOperationStatus, useAppState } from './useAppState';
 
 interface UseTokenAllowanceAndApproveProps {
   tokenAddress: `0x${string}`;
@@ -20,6 +21,7 @@ export const useTokenAllowanceAndApprove = ({
 }: UseTokenAllowanceAndApproveProps) => {
   const { isConnected } = useAccount();
   const { activeChainId } = useChain();
+  const { operationStatusMap, updateOperationStatus } = useAppState();
 
   const { isAllowanceLoading, allowance, refetchAllowance } = useTokenAllowance({
     tokenAddress,
@@ -38,18 +40,26 @@ export const useTokenAllowanceAndApprove = ({
   const { isLoading: isApproveTransactionConfirming } = useTransactionStatus({
     hash: approveData,
     onSuccess: () => {
+      updateOperationStatus('approve', 0);
       approveData && refetchAllowance();
+    },
+    onError: () => {
+      updateOperationStatus('approve', 0);
     }
   });
   const needApprove = useMemo(() => !allowance || allowance < amount, [allowance, amount]);
+
+  const isApproveAvailable = useMemo(() => {
+    return getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'approve') === 1;
+  }, [operationStatusMap, ownerAddress, activeChainId]);
 
   return {
     allowance,
     refetchAllowance,
     isAllowanceLoading,
     approve,
-    isApproving,
-    isApproveTransactionConfirming,
+    isApproving: isApproveAvailable && isApproving,
+    isApproveTransactionConfirming: isApproveAvailable && isApproveTransactionConfirming,
     needApprove
   };
 };
