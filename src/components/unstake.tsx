@@ -74,18 +74,9 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
     if (isAmountLoading) {
       return 'Preparing';
     }
-    if (amount === 0n) {
-      return 'Enter Amount';
-    }
+
     return 'Unstake';
-  }, [
-    isConnected,
-    isCorrectChainId,
-    isAmountLoading,
-    isUnstakeTransactionConfirming,
-    isUnStaking,
-    amount
-  ]);
+  }, [isConnected, isCorrectChainId, isAmountLoading, isUnstakeTransactionConfirming, isUnStaking]);
 
   useEffect(() => {
     const isActive = isUnStaking || isUnstakeTransactionConfirming;
