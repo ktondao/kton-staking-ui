@@ -6,13 +6,23 @@ import { abi } from '@/config/abi/KTONStakingRewards';
 
 import { useWalletInteractionToast } from './useWalletInteractionToast';
 import { useApp } from './useApp';
+import {
+  UseTransactionStatusProps,
+  SuccessType,
+  ErrorType,
+  useTransactionStatus
+} from './useTransactionStatus';
+import { useLatestCallback } from './useLatestCallback';
 
-interface UseStakeProps {
+interface UseStakeProps extends Pick<UseTransactionStatusProps, 'onError' | 'onSuccess'> {
   ownerAddress: `0x${string}`;
 }
 
-export function useStake({ ownerAddress }: UseStakeProps) {
+export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
   const { activeChainId, activeChain } = useApp();
+
+  const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
+  const onErrorLatest = useLatestCallback<ErrorType>(onError);
 
   const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
     useWriteContract();
@@ -31,6 +41,16 @@ export function useStake({ ownerAddress }: UseStakeProps) {
     [activeChain?.stakingContractAddress, activeChainId, ownerAddress, writeContractAsync]
   );
 
+  const { isLoading: isStakeTransactionConfirming } = useTransactionStatus({
+    hash: data,
+    onSuccess: (data) => {
+      if (data) {
+        onSuccessLatest?.(data);
+      }
+    },
+    onError: onErrorLatest ?? (() => null)
+  });
+
   useWalletInteractionToast({
     isError,
     isSuccess,
@@ -43,6 +63,7 @@ export function useStake({ ownerAddress }: UseStakeProps) {
     stakeData: data,
     isStakeSuccess: isSuccess,
     isStakeError: isError,
-    skateFailureReason: failureReason
+    skateFailureReason: failureReason,
+    isStakeTransactionConfirming
   };
 }

@@ -1,15 +1,14 @@
 'use client';
 
 import { useAccount } from 'wagmi';
-import { erc20Abi, parseEther } from 'viem';
+import { erc20Abi, formatEther, parseEther } from 'viem';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useTokenAllowanceAndApprove } from '@/hooks/useTokenAllowanceAndApprove';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/hooks/useApp';
 import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
-import { useTransactionStatus } from '@/hooks/useTransactionStatus';
+import { useTokenAllowanceAndApprove } from '@/hooks/useTokenAllowanceAndApprove';
 import { useStake } from '@/hooks/useStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 
@@ -32,7 +31,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const {
     isLoading: isBalanceLoading,
     formatted: ktonEtherBalance,
-    refetch
+    refetch: refetchBalance
   } = useBigIntContractQuery({
     contractAddress: activeChain?.ktonToken.address,
     abi: erc20Abi,
@@ -40,33 +39,28 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     args: [address]
   });
 
-  const { allowance, isAllowanceLoading, refetchAllowance, approve, isApproving, approveData } =
-    useTokenAllowanceAndApprove({
-      tokenAddress: activeChain?.ktonToken.address,
-      ownerAddress: address!,
-      spenderAddress: activeChain?.stakingContractAddress
-    });
-
-  const { stake, isStaking, stakeData } = useStake({
-    ownerAddress: address!
+  const {
+    allowance,
+    isAllowanceLoading,
+    refetchAllowance,
+    approve,
+    isApproving,
+    isApproveTransactionConfirming
+  } = useTokenAllowanceAndApprove({
+    tokenAddress: activeChain?.ktonToken.address,
+    ownerAddress: address!,
+    spenderAddress: activeChain?.stakingContractAddress
   });
+  console.log('amount', amount, formatEther(amount));
+  console.log('allowance', allowance, allowance && formatEther(allowance));
 
-  const { isLoading: isApproveTransactionConfirming } = useTransactionStatus({
-    hash: approveData,
+  const { stake, isStaking, isStakeTransactionConfirming } = useStake({
+    ownerAddress: address!,
     onSuccess: () => {
-      approveData && refetchAllowance();
-    }
-  });
-
-  const { isLoading: isStakeTransactionConfirming } = useTransactionStatus({
-    hash: stakeData,
-    onSuccess: () => {
-      if (stakeData) {
-        refetch();
-        refetchAllowance();
-        refetchPoolAmount();
-        formRef.current?.setValue('amount', '');
-      }
+      refetchBalance();
+      refetchAllowance();
+      refetchPoolAmount();
+      formRef.current?.setValue('amount', '');
     }
   });
 

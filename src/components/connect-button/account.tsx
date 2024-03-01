@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import Button from '@/components/ghost-button';
+import Button from '@/components/ui/ghost-button';
 import { toShortAddress } from '@/utils';
 
 type AccountProps = {

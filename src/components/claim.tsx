@@ -8,7 +8,6 @@ import Loading from '@/components/loading';
 import { formatNumericValue } from '@/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useClaim } from '@/hooks/useClaim';
-import { useTransactionStatus } from '@/hooks/useTransactionStatus';
 import { useRingRewardAmount } from '@/hooks/useRingRewardAmount';
 
 type ClaimProps = {
@@ -22,12 +21,8 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     ownerAddress: address!
   });
 
-  const { claim, isClaiming, claimData } = useClaim({
-    ownerAddress: address!
-  });
-
-  const { isLoading: isTransactionConfirming } = useTransactionStatus({
-    hash: claimData,
+  const { claim, isClaiming, claimData, isClaimTransactionConfirming } = useClaim({
+    ownerAddress: address!,
     onSuccess() {
       claimData && refetch();
     }
@@ -53,16 +48,16 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     if (isClaiming) {
       return 'Preparing Transaction';
     }
-    if (isTransactionConfirming) {
+    if (isClaimTransactionConfirming) {
       return 'Confirming Transaction';
     }
     return 'Claim';
-  }, [isConnected, isCorrectChainId, isLoading, value, isClaiming, isTransactionConfirming]);
+  }, [isConnected, isCorrectChainId, isLoading, value, isClaiming, isClaimTransactionConfirming]);
 
   useEffect(() => {
-    const isActive = isClaiming || isTransactionConfirming;
+    const isActive = isClaiming || isClaimTransactionConfirming;
     onTransactionActiveChange && onTransactionActiveChange(isActive);
-  }, [isClaiming, isTransactionConfirming, onTransactionActiveChange]);
+  }, [isClaiming, isClaimTransactionConfirming, onTransactionActiveChange]);
 
   return (
     <div>
@@ -94,7 +89,7 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
       </div>
       <Button
         disabled={value === 0n || isLoading || !isConnected || !isCorrectChainId}
-        isLoading={isClaiming || isTransactionConfirming}
+        isLoading={isClaiming || isClaimTransactionConfirming}
         type="submit"
         onClick={claim}
         className="mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white"

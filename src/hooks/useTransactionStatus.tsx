@@ -7,11 +7,14 @@ import { ChainId } from '@/types/chains';
 import { getChainById } from '@/utils';
 
 import { useApp } from './useApp';
+import { useLatestCallback } from './useLatestCallback';
 
-interface UseTransactionStatusProps {
+export type SuccessType = (data: WaitForTransactionReceiptData<Config, ChainId>) => void;
+export type ErrorType = () => void | null;
+export interface UseTransactionStatusProps {
   hash: `0x${string}` | undefined;
-  onSuccess?: (data: WaitForTransactionReceiptData<Config, ChainId>) => void;
-  onError?: () => void;
+  onSuccess?: SuccessType;
+  onError?: ErrorType;
 }
 
 export function useTransactionStatus({ hash, onSuccess, onError }: UseTransactionStatusProps) {
@@ -22,13 +25,9 @@ export function useTransactionStatus({ hash, onSuccess, onError }: UseTransactio
   });
 
   const toastRef = useRef<string | number | null>(null);
-  const onSuccessRef = useRef<typeof onSuccess | null>(null);
-  const onErrorRef = useRef<typeof onError | null>(null);
 
-  useEffect(() => {
-    onSuccessRef.current = onSuccess ?? null;
-    onErrorRef.current = onError ?? null;
-  }, [onSuccess, onError]);
+  const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
+  const onErrorLatest = useLatestCallback<ErrorType>(onError);
 
   useEffect(() => {
     if ((isSuccess || isError) && data) {
@@ -56,9 +55,9 @@ export function useTransactionStatus({ hash, onSuccess, onError }: UseTransactio
       });
 
       if (isSuccess) {
-        onSuccessRef.current?.(data);
+        onSuccessLatest?.(data);
       } else {
-        onErrorRef.current?.();
+        onErrorLatest?.();
       }
     }
 
@@ -67,7 +66,7 @@ export function useTransactionStatus({ hash, onSuccess, onError }: UseTransactio
         toast.dismiss(toastRef.current);
       }
     };
-  }, [isSuccess, isError, data]);
+  }, [isSuccess, isError, data, onSuccessLatest, onErrorLatest]);
 
   return { isSuccess, isError, isLoading, data };
 }

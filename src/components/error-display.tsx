@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 
-import GhostButton from './ghost-button';
+import GhostButton from './ui/ghost-button';
 
 interface Props {
   title: string;

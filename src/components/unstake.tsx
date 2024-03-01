@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/hooks/useApp';
 import { useStakedKTONAmount } from '@/hooks/useStakedKTONAmount';
-import { useTransactionStatus } from '@/hooks/useTransactionStatus';
 import { useUnStake } from '@/hooks/useUnStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 
@@ -35,18 +34,12 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
     ownerAddress: address!
   });
 
-  const { unStake, isUnStaking, unStakeData } = useUnStake({
-    ownerAddress: address!
-  });
-
-  const { isLoading: isTransactionConfirming } = useTransactionStatus({
-    hash: unStakeData,
-    onSuccess: () => {
-      if (unStakeData) {
-        refetch();
-        refetchPoolAmount();
-        formRef.current?.setValue('amount', '');
-      }
+  const { unStake, isUnStaking, isUnstakeTransactionConfirming } = useUnStake({
+    ownerAddress: address!,
+    onSuccess() {
+      refetch();
+      refetchPoolAmount();
+      formRef.current?.setValue('amount', '');
     }
   });
 
@@ -75,7 +68,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
     if (isUnStaking) {
       return 'Preparing Transaction';
     }
-    if (isTransactionConfirming) {
+    if (isUnstakeTransactionConfirming) {
       return 'Confirming Transaction';
     }
     if (isAmountLoading) {
@@ -89,15 +82,15 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
     isConnected,
     isCorrectChainId,
     isAmountLoading,
-    isTransactionConfirming,
+    isUnstakeTransactionConfirming,
     isUnStaking,
     amount
   ]);
 
   useEffect(() => {
-    const isActive = isUnStaking || isTransactionConfirming;
+    const isActive = isUnStaking || isUnstakeTransactionConfirming;
     onTransactionActiveChange && onTransactionActiveChange(isActive);
-  }, [isUnStaking, isTransactionConfirming, onTransactionActiveChange]);
+  }, [isUnStaking, isUnstakeTransactionConfirming, onTransactionActiveChange]);
 
   return (
     <KTONAction
@@ -121,7 +114,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
       <Button
         disabled={!isConnected || isAmountLoading || !isCorrectChainId || !amount}
         type="submit"
-        isLoading={isUnStaking || isTransactionConfirming}
+        isLoading={isUnStaking || isUnstakeTransactionConfirming}
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
         {isAmountLoading ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}

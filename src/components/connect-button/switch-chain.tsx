@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import Button from '@/components/ghost-button';
+import Button from '@/components/ui/ghost-button';
 import { ChainConfig } from '@/types/chains';
 import { useApp } from '@/hooks/useApp';
 import { getChainById, getChains } from '@/utils/chain';
