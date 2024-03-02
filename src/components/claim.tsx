@@ -1,7 +1,6 @@
 'use client';
 import { useAccount } from 'wagmi';
 import { useEffect, useMemo, memo } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { useChain } from '@/hooks/useChain';
@@ -9,18 +8,21 @@ import Loading from '@/components/loading';
 import { formatNumericValue } from '@/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useClaim } from '@/hooks/useClaim';
-import { useRingRewardAmount } from '@/hooks/useRingRewardAmount';
+import { abi } from '@/config/abi/KTONStakingRewards';
+import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
 
 type ClaimProps = {
   onTransactionActiveChange?: (isTransaction: boolean) => void;
 };
 const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   const { address, isConnected } = useAccount();
-  const { isCorrectChainId } = useChain();
-  const queryClient = useQueryClient();
+  const { isCorrectChainId, activeChain } = useChain();
 
-  const { isLoading, value, formatted, refetch, queryKey } = useRingRewardAmount({
-    ownerAddress: address!
+  const { value, formatted, isLoading, isRefetching, refetch } = useBigIntContractQuery({
+    contractAddress: activeChain.stakingContractAddress,
+    abi,
+    functionName: 'earned',
+    args: [address]
   });
 
   const { claim, isClaiming, claimData, isClaimTransactionConfirming } = useClaim({
@@ -28,9 +30,6 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     onSuccess() {
       if (claimData) {
         refetch();
-        queryClient.setQueryData(queryKey, () => {
-          return 0n;
-        });
       }
     }
   });
@@ -70,7 +69,7 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   return (
     <div>
       <div className="flex h-[4.5rem] items-center justify-center gap-3 self-stretch rounded-[0.3125rem] bg-[#1A1D1F]">
-        {isLoading ? (
+        {isLoading || isRefetching ? (
           <Loading className="ml-2 gap-1" itemClassName="size-2" />
         ) : (
           <TooltipProvider>

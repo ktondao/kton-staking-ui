@@ -12,6 +12,7 @@ export type PoolProviderType = {
   value: bigint | undefined;
   formatted: string;
   isLoading: boolean;
+  isRefetching: boolean;
   refetch: () => void;
   queryKey: QueryKey;
 };
@@ -20,6 +21,7 @@ export const PoolContext = createContext<PoolProviderType>({
   value: undefined,
   formatted: '0',
   isLoading: false,
+  isRefetching: false,
   refetch: () => {},
   queryKey: []
 });
@@ -27,7 +29,7 @@ export const PoolContext = createContext<PoolProviderType>({
 export const PoolProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { activeChain } = useChain();
 
-  const { value, formatted, isLoading, refetch, queryKey } = useBigIntContractQuery({
+  const { value, formatted, isLoading, isRefetching, refetch, queryKey } = useBigIntContractQuery({
     contractAddress: activeChain?.stakingContractAddress,
     abi,
     functionName: 'totalSupply',
@@ -40,6 +42,7 @@ export const PoolProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         value,
         formatted,
         isLoading,
+        isRefetching,
         queryKey,
         refetch
       }}

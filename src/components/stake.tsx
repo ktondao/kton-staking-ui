@@ -24,18 +24,19 @@ type StakeProps = {
 };
 const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const formRef: MutableRefObject<Form | null> = useRef(null);
+  const amountRef: MutableRefObject<bigint> = useRef(0n);
   const [amount, setAmount] = useState<bigint>(0n);
 
   const queryClient = useQueryClient();
   const { address, isConnected } = useAccount();
   const { activeChain, isCorrectChainId } = useChain();
-  const { refetch: refetchPoolAmount, queryKey: poolAmountQueryKey } = usePoolAmount();
+  const { refetch: refetchPoolAmount } = usePoolAmount();
 
   const {
     isLoading: isBalanceLoading,
     formatted: ktonEtherBalance,
     refetch: refetchBalance,
-    queryKey: balanceQueryKey
+    isRefetching: isBalanceRefetching
   } = useBigIntContractQuery({
     contractAddress: activeChain?.ktonToken.address,
     abi: erc20Abi,
@@ -55,24 +56,20 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     tokenAddress: activeChain?.ktonToken.address,
     ownerAddress: address!,
     spenderAddress: activeChain?.stakingContractAddress,
-    amount
+    amount,
+    onSuccess: () => {
+      queryClient.setQueryData(allowanceQueryKey, () => {
+        return amountRef.current || 0n;
+      });
+    }
   });
 
   const { stake, isStaking, isStakeTransactionConfirming } = useStake({
     ownerAddress: address!,
     onSuccess: () => {
       refetchBalance();
-      queryClient.setQueryData(balanceQueryKey, (oldData: bigint) => {
-        return (oldData || 0n) - (amount || 0n);
-      });
       refetchAllowance();
-      queryClient.setQueryData(allowanceQueryKey, (oldData: bigint) => {
-        return (oldData || 0n) - (amount || 0n);
-      });
       refetchPoolAmount();
-      queryClient.setQueryData(poolAmountQueryKey, (oldData: bigint) => {
-        return (oldData || 0n) + (amount || 0n);
-      });
       formRef.current?.setValue('amount', '');
     }
   });
@@ -115,6 +112,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
       if (needApprove) {
         approve(data.amount);
       } else {
+        amountRef.current = parseEther(data.amount);
         stake(data.amount);
       }
     },
@@ -130,7 +128,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
         isConnected ? (
           <KTONBalance
             symbol={activeChain?.ktonToken?.symbol}
-            isPending={isBalanceLoading}
+            isPending={isBalanceLoading || isBalanceRefetching}
             etherBalance={ktonEtherBalance}
           />
         ) : (

@@ -2,14 +2,14 @@
 import { useAccount } from 'wagmi';
 import { parseEther } from 'viem';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useChain } from '@/hooks/useChain';
-import { useStakedKTONAmount } from '@/hooks/useStakedKTONAmount';
 import { useUnStake } from '@/hooks/useUnStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
+import { abi } from '@/config/abi/KTONStakingRewards';
+import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
 
 import AmountInputForm from './amount-input-form';
 import KTONBalance from './kton-balance';
@@ -24,32 +24,26 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
   const [amount, setAmount] = useState<bigint>(0n);
   const { address, isConnected } = useAccount();
   const { activeChain, isCorrectChainId } = useChain();
-  const queryClient = useQueryClient();
 
-  const { refetch: refetchPoolAmount, queryKey: poolAmountQueryKey } = usePoolAmount();
+  const { refetch: refetchPoolAmount } = usePoolAmount();
 
   const {
-    isLoading: isAmountLoading,
     formatted: ktonEtherAmount,
+    isLoading: isAmountLoading,
     refetch: refetchBalance,
-    queryKey: stakedKTONQueryKey
-  } = useStakedKTONAmount({
-    ownerAddress: address!
+    isRefetching: isBalanceRefetching
+  } = useBigIntContractQuery({
+    contractAddress: activeChain.stakingContractAddress,
+    abi,
+    functionName: 'balanceOf',
+    args: [address!]
   });
 
   const { unStake, isUnStaking, isUnstakeTransactionConfirming } = useUnStake({
     ownerAddress: address!,
     onSuccess() {
       refetchBalance();
-      queryClient.setQueryData(stakedKTONQueryKey, (oldData: bigint) => {
-        return (oldData || 0n) - (amount || 0n);
-      });
-
       refetchPoolAmount();
-      queryClient.setQueryData(poolAmountQueryKey, (oldData: bigint) => {
-        return (oldData || 0n) - (amount || 0n);
-      });
-
       formRef.current?.setValue('amount', '');
     }
   });
@@ -103,7 +97,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
         isConnected ? (
           <KTONBalance
             symbol={activeChain?.ktonToken?.symbol}
-            isPending={isAmountLoading}
+            isPending={isAmountLoading || isBalanceRefetching}
             etherBalance={ktonEtherAmount}
           />
         ) : (

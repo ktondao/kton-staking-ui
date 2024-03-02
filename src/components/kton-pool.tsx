@@ -11,7 +11,7 @@ import { usePoolAmount } from '@/hooks/usePoolAmount';
 
 const KTONPool = () => {
   const { activeChain } = useChain();
-  const { isLoading, formatted } = usePoolAmount();
+  const { isLoading, isRefetching, formatted } = usePoolAmount();
 
   const totalSupply = useMemo(() => {
     return formatNumericValue(formatted);
@@ -39,7 +39,7 @@ const KTONPool = () => {
           TOTAL {activeChain?.ktonToken?.symbol} POOL
         </h2>
         <div className="flex items-center justify-center">
-          {isLoading ? (
+          {isLoading || isRefetching ? (
             <Loading className="mt-2" />
           ) : (
             <TooltipProvider>
