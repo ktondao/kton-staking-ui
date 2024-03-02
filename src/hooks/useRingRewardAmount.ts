@@ -12,7 +12,7 @@ interface UseRingRewardAmountProps {
 export const useRingRewardAmount = ({ ownerAddress }: UseRingRewardAmountProps) => {
   const { activeChain } = useChain();
 
-  const { value, formatted, isLoading, refetch } = useBigIntContractQuery({
+  const { value, formatted, isLoading, refetch, queryKey } = useBigIntContractQuery({
     contractAddress: activeChain.stakingContractAddress,
     abi,
     functionName: 'earned',
@@ -23,6 +23,7 @@ export const useRingRewardAmount = ({ ownerAddress }: UseRingRewardAmountProps) 
     value,
     formatted,
     isLoading,
-    refetch
+    refetch,
+    queryKey
   };
 };

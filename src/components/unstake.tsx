@@ -2,6 +2,7 @@
 import { useAccount } from 'wagmi';
 import { parseEther } from 'viem';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -23,13 +24,15 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
   const [amount, setAmount] = useState<bigint>(0n);
   const { address, isConnected } = useAccount();
   const { activeChain, isCorrectChainId } = useChain();
+  const queryClient = useQueryClient();
 
-  const { refetch: refetchPoolAmount } = usePoolAmount();
+  const { refetch: refetchPoolAmount, queryKey: poolAmountQueryKey } = usePoolAmount();
 
   const {
     isLoading: isAmountLoading,
     formatted: ktonEtherAmount,
-    refetch
+    refetch: refetchBalance,
+    queryKey: stakedKTONQueryKey
   } = useStakedKTONAmount({
     ownerAddress: address!
   });
@@ -37,8 +40,16 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
   const { unStake, isUnStaking, isUnstakeTransactionConfirming } = useUnStake({
     ownerAddress: address!,
     onSuccess() {
-      refetch();
+      refetchBalance();
+      queryClient.setQueryData(stakedKTONQueryKey, (oldData: bigint) => {
+        return (oldData || 0n) - (amount || 0n);
+      });
+
       refetchPoolAmount();
+      queryClient.setQueryData(poolAmountQueryKey, (oldData: bigint) => {
+        return (oldData || 0n) - (amount || 0n);
+      });
+
       formRef.current?.setValue('amount', '');
     }
   });

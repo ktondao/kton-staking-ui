@@ -3,6 +3,7 @@
 import { useAccount } from 'wagmi';
 import { erc20Abi, parseEther } from 'viem';
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -25,14 +26,16 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const formRef: MutableRefObject<Form | null> = useRef(null);
   const [amount, setAmount] = useState<bigint>(0n);
 
+  const queryClient = useQueryClient();
   const { address, isConnected } = useAccount();
   const { activeChain, isCorrectChainId } = useChain();
-  const { refetch: refetchPoolAmount } = usePoolAmount();
+  const { refetch: refetchPoolAmount, queryKey: poolAmountQueryKey } = usePoolAmount();
 
   const {
     isLoading: isBalanceLoading,
     formatted: ktonEtherBalance,
-    refetch: refetchBalance
+    refetch: refetchBalance,
+    queryKey: balanceQueryKey
   } = useBigIntContractQuery({
     contractAddress: activeChain?.ktonToken.address,
     abi: erc20Abi,
@@ -43,6 +46,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const {
     isAllowanceLoading,
     refetchAllowance,
+    allowanceQueryKey,
     approve,
     isApproving,
     isApproveTransactionConfirming,
@@ -58,8 +62,17 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     ownerAddress: address!,
     onSuccess: () => {
       refetchBalance();
+      queryClient.setQueryData(balanceQueryKey, (oldData: bigint) => {
+        return (oldData || 0n) - (amount || 0n);
+      });
       refetchAllowance();
+      queryClient.setQueryData(allowanceQueryKey, (oldData: bigint) => {
+        return (oldData || 0n) - (amount || 0n);
+      });
       refetchPoolAmount();
+      queryClient.setQueryData(poolAmountQueryKey, (oldData: bigint) => {
+        return (oldData || 0n) + (amount || 0n);
+      });
       formRef.current?.setValue('amount', '');
     }
   });

@@ -24,7 +24,7 @@ export const useBigIntContractQuery = ({
   const { isConnected } = useAccount();
   const { activeChainId } = useChain();
 
-  const { data, refetch, isLoading, isSuccess, isRefetching } = useReadContract<
+  const { data, refetch, isLoading, isSuccess, queryKey } = useReadContract<
     any,
     string,
     any[],
@@ -59,7 +59,8 @@ export const useBigIntContractQuery = ({
   return {
     value: result.value,
     formatted: result.formatted,
-    isLoading: isRefetching || isLoading,
-    refetch
+    isLoading: isLoading,
+    refetch,
+    queryKey
   };
 };

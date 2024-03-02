@@ -22,7 +22,8 @@ export function useTokenAllowance({
     data: allowance,
     isLoading: isAllowanceLoading,
     isRefetching: isAllowanceRefetching,
-    refetch: refetchAllowance
+    refetch: refetchAllowance,
+    queryKey: allowanceQueryKey
   } = useReadContract({
     chainId: activeChainId,
     address: tokenAddress,
@@ -37,6 +38,7 @@ export function useTokenAllowance({
   return {
     isAllowanceLoading: isAllowanceLoading || isAllowanceRefetching,
     refetchAllowance,
-    allowance
+    allowance,
+    allowanceQueryKey
   };
 }

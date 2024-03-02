@@ -1,6 +1,7 @@
 'use client';
 import { useAccount } from 'wagmi';
 import { useEffect, useMemo, memo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { useChain } from '@/hooks/useChain';
@@ -16,15 +17,21 @@ type ClaimProps = {
 const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   const { address, isConnected } = useAccount();
   const { isCorrectChainId } = useChain();
+  const queryClient = useQueryClient();
 
-  const { isLoading, value, formatted, refetch } = useRingRewardAmount({
+  const { isLoading, value, formatted, refetch, queryKey } = useRingRewardAmount({
     ownerAddress: address!
   });
 
   const { claim, isClaiming, claimData, isClaimTransactionConfirming } = useClaim({
     ownerAddress: address!,
     onSuccess() {
-      claimData && refetch();
+      if (claimData) {
+        refetch();
+        queryClient.setQueryData(queryKey, () => {
+          return 0n;
+        });
+      }
     }
   });
 

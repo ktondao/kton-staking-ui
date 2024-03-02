@@ -1,5 +1,6 @@
 import { useAccount } from 'wagmi';
 import { useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useTokenAllowance } from './useTokenAllowance';
 import { useTokenApprove } from './useTokenApprove';
@@ -19,11 +20,13 @@ export const useTokenAllowanceAndApprove = ({
   spenderAddress,
   amount
 }: UseTokenAllowanceAndApproveProps) => {
+  const queryClient = useQueryClient();
+
   const { isConnected } = useAccount();
   const { activeChainId } = useChain();
   const { operationStatusMap, updateOperationStatus } = useAppState();
 
-  const { isAllowanceLoading, allowance, refetchAllowance } = useTokenAllowance({
+  const { isAllowanceLoading, allowance, refetchAllowance, allowanceQueryKey } = useTokenAllowance({
     tokenAddress,
     ownerAddress,
     spenderAddress,
@@ -41,7 +44,12 @@ export const useTokenAllowanceAndApprove = ({
     hash: approveData,
     onSuccess: () => {
       updateOperationStatus('approve', 0);
-      approveData && refetchAllowance();
+      if (approveData) {
+        refetchAllowance();
+        queryClient.setQueryData(allowanceQueryKey, () => {
+          return amount || 0n;
+        });
+      }
     },
     onError: () => {
       updateOperationStatus('approve', 0);
@@ -56,6 +64,7 @@ export const useTokenAllowanceAndApprove = ({
   return {
     allowance,
     refetchAllowance,
+    allowanceQueryKey,
     isAllowanceLoading,
     approve,
     isApproving: isApproveAvailable && isApproving,

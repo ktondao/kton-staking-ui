@@ -12,7 +12,7 @@ interface UseStakedKTONAmountProps {
 export const useStakedKTONAmount = ({ ownerAddress }: UseStakedKTONAmountProps) => {
   const { activeChain } = useChain();
 
-  const { value, formatted, isLoading, refetch } = useBigIntContractQuery({
+  const { value, formatted, isLoading, refetch, queryKey } = useBigIntContractQuery({
     contractAddress: activeChain.stakingContractAddress,
     abi,
     functionName: 'balanceOf',
@@ -23,6 +23,7 @@ export const useStakedKTONAmount = ({ ownerAddress }: UseStakedKTONAmountProps) 
     value,
     formatted,
     isLoading,
-    refetch
+    refetch,
+    queryKey
   };
 };
