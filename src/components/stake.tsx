@@ -33,10 +33,9 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const { refetch: refetchPoolAmount } = usePoolAmount();
 
   const {
-    isLoading: isBalanceLoading,
+    isLoadingOrRefetching: isBalanceLoading,
     formatted: ktonEtherBalance,
-    refetch: refetchBalance,
-    isRefetching: isBalanceRefetching
+    refetch: refetchBalance
   } = useBigIntContractQuery({
     contractAddress: activeChain?.ktonToken.address,
     abi: erc20Abi,
@@ -128,7 +127,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
         isConnected ? (
           <KTONBalance
             symbol={activeChain?.ktonToken?.symbol}
-            isPending={isBalanceLoading || isBalanceRefetching}
+            isPending={isBalanceLoading}
             etherBalance={ktonEtherBalance}
           />
         ) : (

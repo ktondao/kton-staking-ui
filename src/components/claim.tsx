@@ -18,7 +18,7 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   const { address, isConnected } = useAccount();
   const { isCorrectChainId, activeChain } = useChain();
 
-  const { value, formatted, isLoading, isRefetching, refetch } = useBigIntContractQuery({
+  const { value, formatted, isLoadingOrRefetching, refetch } = useBigIntContractQuery({
     contractAddress: activeChain.stakingContractAddress,
     abi,
     functionName: 'earned',
@@ -51,15 +51,18 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     if (isClaimTransactionConfirming) {
       return 'Confirming Transaction';
     }
-    if (isLoading) {
+    if (isLoadingOrRefetching) {
       return 'Preparing';
-    }
-    if (value === 0n) {
-      return 'No Rewards';
     }
 
     return 'Claim';
-  }, [isConnected, isCorrectChainId, isLoading, value, isClaiming, isClaimTransactionConfirming]);
+  }, [
+    isConnected,
+    isCorrectChainId,
+    isLoadingOrRefetching,
+    isClaiming,
+    isClaimTransactionConfirming
+  ]);
 
   useEffect(() => {
     const isActive = isClaiming || isClaimTransactionConfirming;
@@ -69,7 +72,7 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   return (
     <div>
       <div className="flex h-[4.5rem] items-center justify-center gap-3 self-stretch rounded-[0.3125rem] bg-[#1A1D1F]">
-        {isLoading || isRefetching ? (
+        {isLoadingOrRefetching ? (
           <Loading className="ml-2 gap-1" itemClassName="size-2" />
         ) : (
           <TooltipProvider>
@@ -95,13 +98,13 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
         <span className=" text-[1.5rem] font-bold leading-normal text-white">RING</span>
       </div>
       <Button
-        disabled={value === 0n || isLoading || !isConnected || !isCorrectChainId}
+        disabled={value === 0n || isLoadingOrRefetching || !isConnected || !isCorrectChainId}
         isLoading={isClaiming || isClaimTransactionConfirming}
         type="submit"
         onClick={claim}
         className="mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white"
       >
-        {isLoading ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
+        {isLoadingOrRefetching ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
     </div>
   );

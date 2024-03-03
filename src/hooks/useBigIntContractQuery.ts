@@ -37,9 +37,7 @@ export const useBigIntContractQuery = ({
     functionName,
     args,
     query: {
-      enabled: forceEnabled ? true : isConnected,
-      networkMode: 'offlineFirst',
-      refetchOnWindowFocus: false
+      enabled: forceEnabled ? true : isConnected
     }
   });
 
@@ -56,11 +54,14 @@ export const useBigIntContractQuery = ({
     };
   }, [data, isSuccess]);
 
+  const isLoadingOrRefetching = useMemo(() => isLoading || isRefetching, [isLoading, isRefetching]);
+
   return {
     value: result.value,
     formatted: result.formatted,
     isLoading: isLoading,
     isRefetching,
+    isLoadingOrRefetching,
     refetch,
     queryKey
   };

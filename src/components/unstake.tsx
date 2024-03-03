@@ -29,9 +29,8 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
 
   const {
     formatted: ktonEtherAmount,
-    isLoading: isAmountLoading,
-    refetch: refetchBalance,
-    isRefetching: isBalanceRefetching
+    isLoadingOrRefetching: isAmountLoading,
+    refetch: refetchBalance
   } = useBigIntContractQuery({
     contractAddress: activeChain.stakingContractAddress,
     abi,
@@ -97,7 +96,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
         isConnected ? (
           <KTONBalance
             symbol={activeChain?.ktonToken?.symbol}
-            isPending={isAmountLoading || isBalanceRefetching}
+            isPending={isAmountLoading}
             etherBalance={ktonEtherAmount}
           />
         ) : (
