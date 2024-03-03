@@ -2,7 +2,7 @@
 
 import { useAccount } from 'wagmi';
 import { erc20Abi, parseEther } from 'viem';
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { cn } from '@/lib/utils';
@@ -143,7 +143,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
         isLoading={
           isApproving || isApproveTransactionConfirming || isStaking || isStakeTransactionConfirming
         }
-        className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
+        className={cn('mt-5 w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
         {isAllowanceLoading || isBalanceLoading ? (
           <span className="animate-pulse"> {buttonText}</span>

@@ -13,7 +13,7 @@ const Footer = () => {
         </span>
 
         <div className="hidden items-center gap-5 md:flex">
-          {socialConfig.map(({ url, name, iconPath }, index) => (
+          {socialConfig.map(({ url, name, iconPath }) => (
             <a
               key={name}
               href={url}

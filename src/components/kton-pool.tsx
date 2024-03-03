@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo } from 'react';
 
 import Loading from '@/components/loading';
 import { formatNumericValue } from '@/utils';
@@ -13,9 +12,7 @@ const KTONPool = () => {
   const { activeChain } = useChain();
   const { isLoading, isRefetching, formatted } = usePoolAmount();
 
-  const totalSupply = useMemo(() => {
-    return formatNumericValue(formatted);
-  }, [formatted]);
+  const totalSupply = formatNumericValue(formatted);
 
   return (
     <div className="flex h-[11rem] w-full flex-col items-center justify-center gap-[0.625rem] rounded-[0.3125rem] bg-[#1A1D1F] p-[1.25rem]">

@@ -35,10 +35,6 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     }
   });
 
-  const rewardAmount = useMemo(() => {
-    return formatNumericValue(formatted);
-  }, [formatted]);
-
   const { buttonText, isButtonDisabled } = useClaimState({
     isConnected,
     isCorrectChainId,
@@ -47,6 +43,8 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     isLoadingOrRefetching,
     value
   });
+
+  const rewardAmount = formatNumericValue(formatted);
 
   useEffect(() => {
     const isActive = isClaiming || isClaimTransactionConfirming;
@@ -84,11 +82,11 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
       <Button
         disabled={isButtonDisabled}
         isLoading={isClaiming || isClaimTransactionConfirming}
-        type="submit"
+        type="button"
         onClick={claim}
-        className="mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white"
+        className="mt-5 w-full rounded-[0.3125rem] text-[0.875rem] text-white"
       >
-        {isLoadingOrRefetching ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
+        {isLoadingOrRefetching ? <span className="animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
     </div>
   );

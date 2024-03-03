@@ -11,6 +11,5 @@ export function removeVersionFromErrorMessage(
   if (!errorMessage) {
     return defaultMessage;
   }
-  // 使用正则表达式移除消息中的版本信息
   return errorMessage.replace(/Version: viem@\S+/, '').trim() || defaultMessage;
 }

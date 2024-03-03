@@ -1,6 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useState, startTransition, Suspense, useCallback } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,17 +11,14 @@ import KTONActionLoading from '@/components/kton-action-loading';
 import ClaimLoading from '@/components/claim-loading';
 import { cn } from '@/lib/utils';
 
-// 动态导入组件，禁用SSR
 const Stake = dynamic(() => import('@/components/stake'), {
   ssr: false,
   loading: () => <KTONActionLoading />
 });
-
 const UnStakes = dynamic(() => import('@/components/unstake'), {
   ssr: false,
   loading: () => <KTONActionLoading />
 });
-
 const Claim = dynamic(() => import('@/components/claim'), {
   ssr: false,
   loading: () => <ClaimLoading />
@@ -39,9 +36,18 @@ const DefiTabs = () => {
 
   const value = searchParams.get('type') || defaultValue;
 
+  const handleClick = useCallback(
+    (key: (typeof menuItems)[number]['key']) => {
+      startTransition(() => {
+        router.push(`${pathname}?type=${key}`);
+      });
+    },
+    [router, pathname]
+  );
+
   return (
     <Tabs defaultValue={defaultValue} className="w-full" value={value}>
-      <TabsList className="flex h-[1.5rem] items-center justify-start gap-[1.25rem] self-stretch bg-transparent">
+      <TabsList className="flex h-6 items-center justify-start gap-5  self-stretch bg-transparent">
         {menuItems.map((item) => (
           <TabsTrigger
             asChild
@@ -54,40 +60,40 @@ const DefiTabs = () => {
                 'cursor-pointer',
                 isTransactionActive ? transactionActiveClassName : ''
               )}
-              onClick={() => {
-                router.push(`${pathname}?type=${item.key}`);
-              }}
+              onClick={() => handleClick(item.key)}
             >
               {item.label}
             </span>
           </TabsTrigger>
         ))}
       </TabsList>
-      <Separator className="my-[1.25rem] bg-white/20" />
+      <Separator className="my-5 bg-white/20" />
       <AnimatePresence>
-        {menuItems.map(
-          (item) =>
-            value === item.key && (
-              <TabsContent key={item.key} value={item.key} className="mt-0">
-                <motion.div
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="flex flex-col gap-[1.25rem]"
-                >
-                  {value === 'stake' && (
-                    <Stake onTransactionActiveChange={setIsTransactionActive} />
-                  )}
-                  {value === 'unstake' && (
-                    <UnStakes onTransactionActiveChange={setIsTransactionActive} />
-                  )}
-                  {value === 'claim' && (
-                    <Claim onTransactionActiveChange={setIsTransactionActive} />
-                  )}
-                </motion.div>
-              </TabsContent>
-            )
-        )}
+        <Suspense fallback={<div>Loading...</div>}>
+          {menuItems.map(
+            (item) =>
+              value === item.key && (
+                <TabsContent key={item.key} value={item.key} className="mt-0">
+                  <motion.div
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex flex-col gap-5"
+                  >
+                    {value === 'stake' && (
+                      <Stake onTransactionActiveChange={setIsTransactionActive} />
+                    )}
+                    {value === 'unstake' && (
+                      <UnStakes onTransactionActiveChange={setIsTransactionActive} />
+                    )}
+                    {value === 'claim' && (
+                      <Claim onTransactionActiveChange={setIsTransactionActive} />
+                    )}
+                  </motion.div>
+                </TabsContent>
+              )
+          )}
+        </Suspense>
       </AnimatePresence>
     </Tabs>
   );
