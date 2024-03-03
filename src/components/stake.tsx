@@ -34,7 +34,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
 
   const {
     isLoadingOrRefetching: isBalanceLoading,
-    formatted: ktonEtherBalance,
+    formatted: formattedBalance,
     refetch: refetchBalance
   } = useBigIntContractQuery({
     contractAddress: activeChain?.ktonToken.address,
@@ -122,13 +122,13 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     <AmountInputForm
       ref={formRef}
       key="stake"
-      etherBalance={ktonEtherBalance}
+      etherBalance={formattedBalance}
       renderBalance={
         isConnected ? (
           <KTONBalance
             symbol={activeChain?.ktonToken?.symbol}
             isPending={isBalanceLoading}
-            etherBalance={ktonEtherBalance}
+            etherBalance={formattedBalance}
           />
         ) : (
           `0 ${activeChain.ktonToken?.symbol}`
@@ -146,7 +146,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
         {isAllowanceLoading || isBalanceLoading ? (
-          <span className=" animate-pulse"> {buttonText}</span>
+          <span className="animate-pulse"> {buttonText}</span>
         ) : (
           buttonText
         )}

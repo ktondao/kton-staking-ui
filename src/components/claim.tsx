@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useClaim } from '@/hooks/useClaim';
 import { abi } from '@/config/abi/KTONStakingRewards';
 import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
+import { useClaimState } from '@/hooks/useClaimState';
 
 type ClaimProps = {
   onTransactionActiveChange?: (isTransaction: boolean) => void;
@@ -38,31 +39,14 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     return formatNumericValue(formatted);
   }, [formatted]);
 
-  const buttonText = useMemo(() => {
-    if (!isConnected) {
-      return 'Wallet Disconnected';
-    }
-    if (!isCorrectChainId) {
-      return 'Wrong Network';
-    }
-    if (isClaiming) {
-      return 'Preparing Transaction';
-    }
-    if (isClaimTransactionConfirming) {
-      return 'Confirming Transaction';
-    }
-    if (isLoadingOrRefetching) {
-      return 'Preparing';
-    }
-
-    return 'Claim';
-  }, [
+  const { buttonText, isButtonDisabled } = useClaimState({
     isConnected,
     isCorrectChainId,
-    isLoadingOrRefetching,
     isClaiming,
-    isClaimTransactionConfirming
-  ]);
+    isClaimTransactionConfirming,
+    isLoadingOrRefetching,
+    value
+  });
 
   useEffect(() => {
     const isActive = isClaiming || isClaimTransactionConfirming;
@@ -98,7 +82,7 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
         <span className=" text-[1.5rem] font-bold leading-normal text-white">RING</span>
       </div>
       <Button
-        disabled={value === 0n || isLoadingOrRefetching || !isConnected || !isCorrectChainId}
+        disabled={isButtonDisabled}
         isLoading={isClaiming || isClaimTransactionConfirming}
         type="submit"
         onClick={claim}

@@ -29,8 +29,8 @@ export const useStakeState = ({
     if (!isCorrectChainId) return 'Wrong Network';
     if (isApproving) return 'Preparing Approval';
     if (isApproveTransactionConfirming) return 'Confirming Approval';
-    if (isStaking) return 'Preparing Transaction';
-    if (isStakeTransactionConfirming) return 'Confirming Transaction';
+    if (isStaking) 'Preparing Stake';
+    if (isStakeTransactionConfirming) 'Confirming Stake';
     if (isBalanceLoading || isAllowanceLoading) return 'Preparing...';
     if (amount !== 0n && needApprove) return 'Approve';
     return 'Stake';

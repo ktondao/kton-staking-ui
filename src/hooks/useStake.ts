@@ -80,10 +80,10 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
   return {
     stake,
     isStaking: isStakeAvailable && isPending,
-    stakeData: data,
+    stakeTransactionData: data,
     isStakeSuccess: isSuccess,
     isStakeError: isError,
-    skateFailureReason: failureReason,
+    stateFailureReason: failureReason,
     isStakeTransactionConfirming: isStakeAvailable && isStakeTransactionConfirming
   };
 }

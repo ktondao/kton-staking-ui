@@ -1,7 +1,7 @@
 'use client';
 import { useAccount } from 'wagmi';
 import { parseEther } from 'viem';
-import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { useUnStake } from '@/hooks/useUnStake';
 import { usePoolAmount } from '@/hooks/usePoolAmount';
 import { abi } from '@/config/abi/KTONStakingRewards';
 import { useBigIntContractQuery } from '@/hooks/useBigIntContractQuery';
+import { useUnStakeState } from '@/hooks/useUnstakeState';
 
 import AmountInputForm from './amount-input-form';
 import KTONBalance from './kton-balance';
@@ -62,25 +63,14 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
     [unStake]
   );
 
-  const buttonText = useMemo(() => {
-    if (!isConnected) {
-      return 'Wallet Disconnected';
-    }
-    if (!isCorrectChainId) {
-      return 'Wrong Network';
-    }
-    if (isUnStaking) {
-      return 'Preparing Transaction';
-    }
-    if (isUnstakeTransactionConfirming) {
-      return 'Confirming Transaction';
-    }
-    if (isAmountLoading) {
-      return 'Preparing';
-    }
-
-    return 'Unstake';
-  }, [isConnected, isCorrectChainId, isAmountLoading, isUnstakeTransactionConfirming, isUnStaking]);
+  const { buttonText, isButtonDisabled } = useUnStakeState({
+    isConnected,
+    isCorrectChainId,
+    isAmountLoading,
+    isUnStaking,
+    isUnstakeTransactionConfirming,
+    amount
+  });
 
   useEffect(() => {
     const isActive = isUnStaking || isUnstakeTransactionConfirming;
@@ -107,7 +97,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
       onAmountChange={handleAmountChange}
     >
       <Button
-        disabled={!isConnected || isAmountLoading || !isCorrectChainId || !amount}
+        disabled={isButtonDisabled}
         type="submit"
         isLoading={isUnStaking || isUnstakeTransactionConfirming}
         className={cn('mt-[1.25rem] w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
