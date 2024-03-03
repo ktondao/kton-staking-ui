@@ -26,8 +26,8 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
   const onErrorLatest = useLatestCallback<ErrorType>(onError);
 
-  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
-    useWriteContract();
+  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data, reset } =
+    useWriteContract({});
 
   const stake = useCallback(
     async (amount: string): Promise<WriteContractReturnType> => {
@@ -58,10 +58,12 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
     onSuccess: (data) => {
       updateOperationStatus('stake', 0);
       if (data) {
+        reset();
         onSuccessLatest?.(data);
       }
     },
     onError: () => {
+      reset();
       updateOperationStatus('stake', 0);
       onErrorLatest ?? (() => null);
     }

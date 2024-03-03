@@ -25,7 +25,7 @@ export function useUnStake({ ownerAddress, onError, onSuccess }: UseUnStakeProps
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
   const onErrorLatest = useLatestCallback<ErrorType>(onError);
 
-  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
+  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data, reset } =
     useWriteContract();
 
   const unStake = useCallback(
@@ -56,10 +56,12 @@ export function useUnStake({ ownerAddress, onError, onSuccess }: UseUnStakeProps
     onSuccess: (data) => {
       updateOperationStatus('unstake', 0);
       if (data) {
+        reset();
         onSuccessLatest?.(data);
       }
     },
     onError() {
+      reset();
       updateOperationStatus('unstake', 0);
       onErrorLatest ?? (() => null);
     }

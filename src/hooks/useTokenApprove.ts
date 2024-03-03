@@ -19,7 +19,7 @@ export function useTokenApprove({
   activeChainId
 }: UseTokenApproveProps) {
   const { updateOperationStatus } = useAppState();
-  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
+  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data, reset } =
     useWriteContract();
 
   const approve = useCallback(
@@ -47,6 +47,7 @@ export function useTokenApprove({
 
   return {
     approve,
+    approveReset: reset,
     isApproving: isPending,
     approveData: data,
     isApproveSuccess: isSuccess,

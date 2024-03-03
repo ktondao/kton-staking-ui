@@ -42,7 +42,7 @@ export const useTokenAllowanceAndApprove = ({
     args: [ownerAddress, spenderAddress]
   });
 
-  const { approve, isApproving, approveData } = useTokenApprove({
+  const { approve, isApproving, approveData, approveReset } = useTokenApprove({
     tokenAddress,
     spenderAddress,
     activeChainId
@@ -53,10 +53,12 @@ export const useTokenAllowanceAndApprove = ({
     onSuccess: (data) => {
       updateOperationStatus('approve', 0);
       if (approveData) {
+        approveReset();
         onSuccessLatest?.(data);
       }
     },
     onError: () => {
+      approveReset();
       updateOperationStatus('approve', 0);
       onErrorLatest ?? (() => null);
     }

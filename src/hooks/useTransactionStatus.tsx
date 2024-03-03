@@ -21,8 +21,7 @@ export function useTransactionStatus({ hash, onSuccess, onError }: UseTransactio
   const { activeChainId } = useChain();
   const { data, isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
     hash,
-    chainId: activeChainId,
-    onReplaced: (replacement) => console.log('replacement', replacement)
+    chainId: activeChainId
   });
 
   const toastRef = useRef<string | number | null>(null);

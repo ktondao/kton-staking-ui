@@ -26,7 +26,7 @@ export function useClaim({ ownerAddress, onError, onSuccess }: ClaimProps) {
   const onSuccessLatest = useLatestCallback<SuccessType>(onSuccess);
   const onErrorLatest = useLatestCallback<ErrorType>(onError);
 
-  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data } =
+  const { writeContractAsync, isPending, isError, isSuccess, failureReason, data, reset } =
     useWriteContract();
 
   const claim = useCallback(async (): Promise<WriteContractReturnType> => {
@@ -55,10 +55,12 @@ export function useClaim({ ownerAddress, onError, onSuccess }: ClaimProps) {
     onSuccess: (data) => {
       updateOperationStatus('claim', 0);
       if (data) {
+        reset();
         onSuccessLatest?.(data);
       }
     },
     onError() {
+      reset();
       updateOperationStatus('claim', 0);
       onErrorLatest?.();
     }
