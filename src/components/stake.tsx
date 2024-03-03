@@ -109,6 +109,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
   const handleSubmit = useCallback(
     (data: SubmitData) => {
       if (needApprove) {
+        amountRef.current = parseEther(data.amount);
         approve(data.amount);
       } else {
         amountRef.current = parseEther(data.amount);
