@@ -17,9 +17,9 @@ function filterTestnetsInProduction(chains: Record<ChainId, ChainConfig>): Chain
   const chainConfigs = Object.values(chainConfigMap).sort((a, b) => {
     return b.id - a.id;
   });
-  if (process.env.NODE_ENV === 'production') {
-    return chainConfigs.filter((chain) => !chain.testnet);
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   return chainConfigs.filter((chain) => !chain.testnet);
+  // }
   return chainConfigs;
 }
 
