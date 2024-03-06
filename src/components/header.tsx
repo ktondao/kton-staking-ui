@@ -6,7 +6,7 @@ import ConnectButton from '@/components/connect-button';
 const Header = () => {
   return (
     <header className="h-12 w-full md:h-[3.5rem]">
-      <div className="container flex h-full items-center justify-between">
+      <div className="mx-auto flex h-full w-full items-center justify-between px-8">
         <Link href="/" title="darwinia" className="hidden md:inline ">
           <Image
             src={'/images/common/logo.png'}

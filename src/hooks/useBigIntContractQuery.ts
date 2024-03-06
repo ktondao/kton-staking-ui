@@ -6,21 +6,29 @@ import { useReadContract, Config, useAccount } from 'wagmi';
 
 import { useChain } from './useChain';
 
-interface UseBigIntContractQueryProps {
-  abi: Abi;
+interface UseBigIntContractQueryProps<
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends ContractFunctionName<TAbi, 'pure' | 'view'>,
+  TArgs extends ContractFunctionArgs<TAbi, 'pure' | 'view', TFunctionName>
+> {
+  abi: TAbi;
   contractAddress: `0x${string}`;
-  functionName: ContractFunctionName<Abi, 'pure' | 'view'>;
-  args?: ContractFunctionArgs<Abi, 'pure' | 'view', ContractFunctionName<Abi, 'pure' | 'view'>>;
+  functionName: TFunctionName;
+  args?: TArgs;
   forceEnabled?: boolean;
 }
 
-export const useBigIntContractQuery = ({
+export const useBigIntContractQuery = <
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends ContractFunctionName<TAbi, 'pure' | 'view'>,
+  TArgs extends ContractFunctionArgs<TAbi, 'pure' | 'view', TFunctionName>
+>({
   contractAddress,
   abi,
   functionName,
   forceEnabled,
-  args = []
-}: UseBigIntContractQueryProps) => {
+  args = [] as TArgs
+}: UseBigIntContractQueryProps<TAbi, TFunctionName, TArgs>) => {
   const { isConnected } = useAccount();
   const { activeChainId } = useChain();
 
@@ -35,7 +43,7 @@ export const useBigIntContractQuery = ({
     address: contractAddress,
     abi,
     functionName,
-    args,
+    args: args as any[],
     query: {
       enabled: forceEnabled ? true : isConnected
     }

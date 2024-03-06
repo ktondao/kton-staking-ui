@@ -23,7 +23,7 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     contractAddress: activeChain.stakingContractAddress,
     abi,
     functionName: 'earned',
-    args: [address]
+    args: [address!]
   });
 
   const { claim, isClaiming, claimData, isClaimTransactionConfirming } = useClaim({

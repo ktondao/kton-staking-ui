@@ -40,7 +40,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     contractAddress: activeChain?.ktonToken.address,
     abi: erc20Abi,
     functionName: 'balanceOf',
-    args: [address]
+    args: [address!]
   });
 
   const {
