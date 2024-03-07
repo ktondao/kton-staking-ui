@@ -17,7 +17,7 @@ const ConnectButton = () => {
         <Button onClick={openConnectModal}>Connect Wallet</Button>
       ) : null}
       {isConnected ? <SwitchChain /> : null}
-      {address ? <Account address={address} /> : null}
+      {isConnected && address ? <Account address={address} /> : null}
     </div>
   );
 };
