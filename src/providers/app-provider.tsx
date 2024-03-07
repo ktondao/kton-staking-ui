@@ -30,7 +30,7 @@ export const getOperationStatus = (
   type: OperationStatusType
 ): number => {
   const key = generateOperationKey(address, chainId, type);
-  return operationStatusMap[key] || 0;
+  return operationStatusMap?.[key] || 0;
 };
 
 export const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {

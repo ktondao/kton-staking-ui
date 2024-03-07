@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useCallback, useEffect, useRef, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { useAccount, useSwitchChain } from 'wagmi';
 import { toast } from 'sonner';
 import { useDebounce } from 'react-use';
@@ -71,10 +71,7 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
     [switchChain, chainId, handleSetActiveChainId]
   );
 
-  const activeChain = useMemo(
-    () => getChainById(activeChainId) || getDefaultChain(),
-    [activeChainId]
-  );
+  const activeChain = getChainById(activeChainId) || getDefaultChain();
 
   useEffect(() => {
     if (activeChain?.name) {
@@ -88,10 +85,7 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
     }
   }, [activeChain?.name]);
 
-  const isSupportedChainId = useMemo(
-    () => Boolean(chainId && chains?.some((chain) => chain.id === chainId)),
-    [chainId, chains]
-  );
+  const isSupportedChainId = Boolean(chainId && chains?.some((chain) => chain.id === chainId));
 
   const isCorrectChainId = !!chainId && chainId === activeChainId;
 

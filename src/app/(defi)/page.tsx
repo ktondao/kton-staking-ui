@@ -1,6 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useState, startTransition, Suspense, useCallback } from 'react';
+import { useState, startTransition, Suspense } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -36,14 +36,11 @@ const DefiTabs = () => {
 
   const value = searchParams.get('type') || defaultValue;
 
-  const handleClick = useCallback(
-    (key: (typeof menuItems)[number]['key']) => {
-      startTransition(() => {
-        router.push(`${pathname}?type=${key}`);
-      });
-    },
-    [router, pathname]
-  );
+  const handleClick = (key: (typeof menuItems)[number]['key']) => {
+    startTransition(() => {
+      router.push(`${pathname}?type=${key}`);
+    });
+  };
 
   return (
     <Tabs defaultValue={defaultValue} className="w-full" value={value}>

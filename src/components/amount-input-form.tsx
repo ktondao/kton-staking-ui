@@ -64,6 +64,11 @@ const AmountInputForm = forwardRef<Form, AmountInputFormProps>(
       return true;
     }, [watchedAmount, etherBalance, setError, clearErrors]);
 
+    const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
+      const isValid = validateAmount();
+      isValid && onSubmit(data);
+    };
+
     useEffect(() => {
       if (watchedAmount === '') {
         onAmountChange && onAmountChange(watchedAmount);
@@ -74,14 +79,6 @@ const AmountInputForm = forwardRef<Form, AmountInputFormProps>(
         onAmountChange && onAmountChange(watchedAmount);
       }
     }, [watchedAmount, validateAmount, onAmountChange]);
-
-    const handleFormSubmit = useCallback(
-      (data: z.infer<typeof formSchema>) => {
-        const isValid = validateAmount();
-        isValid && onSubmit(data);
-      },
-      [validateAmount, onSubmit]
-    );
 
     useImperativeHandle(ref, () => form, [form]);
 

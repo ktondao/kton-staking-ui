@@ -1,6 +1,6 @@
 'use client';
 import { useAccount } from 'wagmi';
-import { useEffect, useMemo, memo } from 'react';
+import { useEffect, memo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useChain } from '@/hooks/useChain';

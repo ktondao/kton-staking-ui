@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useWriteContract } from 'wagmi';
 import { WriteContractReturnType, parseEther } from 'viem';
 
@@ -67,9 +67,8 @@ export function useUnStake({ ownerAddress, onError, onSuccess }: UseUnStakeProps
     }
   });
 
-  const isUnStakeAvailable = useMemo(() => {
-    return getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'unstake') === 1;
-  }, [operationStatusMap, ownerAddress, activeChainId]);
+  const isUnStakeAvailable =
+    getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'unstake') === 1;
 
   useWalletInteractionToast({
     isError,

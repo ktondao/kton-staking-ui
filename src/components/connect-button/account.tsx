@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { useCopyToClipboard } from 'react-use';
 import { toast } from 'sonner';
@@ -17,12 +17,12 @@ const Account = ({ address }: AccountProps) => {
   const toastRef = useRef<string | number | null>(null);
   const [, copyToClipboard] = useCopyToClipboard();
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = () => {
     copyToClipboard(address);
     toastRef.current = toast('✅ Address successfully copied to clipboard.', {
       duration: 2000
     });
-  }, [address, copyToClipboard]);
+  };
 
   return address ? (
     <Button title="Click to copy the address to your clipboard" onClick={handleCopy}>

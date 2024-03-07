@@ -32,9 +32,8 @@ export const useClaimState = ({
     isLoadingOrRefetching
   ]);
 
-  const isButtonDisabled = useMemo(() => {
-    return isLoadingOrRefetching || !isConnected || !isCorrectChainId || value === 0n;
-  }, [isLoadingOrRefetching, isConnected, isCorrectChainId, value]);
+  const isButtonDisabled =
+    isLoadingOrRefetching || !isConnected || !isCorrectChainId || value === 0n;
 
   return { buttonText, isButtonDisabled };
 };

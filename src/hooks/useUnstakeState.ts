@@ -26,9 +26,7 @@ export const useUnStakeState = ({
     return 'Unstake';
   }, [isConnected, isCorrectChainId, isAmountLoading, isUnstakeTransactionConfirming, isUnStaking]);
 
-  const isButtonDisabled = useMemo(() => {
-    return isAmountLoading || !isConnected || !isCorrectChainId || !amount;
-  }, [isAmountLoading, isConnected, isCorrectChainId, amount]);
+  const isButtonDisabled = isAmountLoading || !isConnected || !isCorrectChainId || !amount;
 
   return { buttonText, isButtonDisabled };
 };

@@ -62,7 +62,7 @@ export const useBigIntContractQuery = <
     };
   }, [data, isSuccess]);
 
-  const isLoadingOrRefetching = useMemo(() => isLoading || isRefetching, [isLoading, isRefetching]);
+  const isLoadingOrRefetching = isLoading || isRefetching;
 
   return {
     value: result.value,

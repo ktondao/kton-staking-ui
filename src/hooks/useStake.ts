@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useWriteContract } from 'wagmi';
 import { WriteContractReturnType, parseEther } from 'viem';
 
@@ -69,9 +69,8 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
     }
   });
 
-  const isStakeAvailable = useMemo(() => {
-    return getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'stake') === 1;
-  }, [operationStatusMap, ownerAddress, activeChainId]);
+  const isStakeAvailable =
+    getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'stake') === 1;
 
   useWalletInteractionToast({
     isError,

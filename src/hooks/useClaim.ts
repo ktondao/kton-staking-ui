@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useWriteContract } from 'wagmi';
 import { WriteContractReturnType } from 'viem';
 
@@ -66,9 +66,8 @@ export function useClaim({ ownerAddress, onError, onSuccess }: ClaimProps) {
     }
   });
 
-  const isClaimAvailable = useMemo(() => {
-    return getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'claim') === 1;
-  }, [operationStatusMap, ownerAddress, activeChainId]);
+  const isClaimAvailable =
+    getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'claim') === 1;
 
   useWalletInteractionToast({
     isError,

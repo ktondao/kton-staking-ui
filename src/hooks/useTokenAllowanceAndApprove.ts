@@ -1,5 +1,4 @@
 import { erc20Abi } from 'viem';
-import { useMemo } from 'react';
 
 import { useTokenApprove } from './useTokenApprove';
 import { ErrorType, SuccessType, useTransactionStatus } from './useTransactionStatus';
@@ -63,11 +62,10 @@ export const useTokenAllowanceAndApprove = ({
       onErrorLatest ?? (() => null);
     }
   });
-  const needApprove = useMemo(() => !allowance || allowance < amount, [allowance, amount]);
+  const needApprove = !allowance || allowance < amount;
 
-  const isApproveAvailable = useMemo(() => {
-    return getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'approve') === 1;
-  }, [operationStatusMap, ownerAddress, activeChainId]);
+  const isApproveAvailable =
+    getOperationStatus(operationStatusMap, ownerAddress, activeChainId, 'approve') === 1;
 
   return {
     allowance,

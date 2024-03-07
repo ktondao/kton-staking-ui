@@ -47,11 +47,8 @@ export const useStakeState = ({
     amount
   ]);
 
-  const isButtonDisabled = useMemo(() => {
-    return (
-      isAllowanceLoading || isBalanceLoading || !isConnected || !isCorrectChainId || amount === 0n
-    );
-  }, [isAllowanceLoading, isBalanceLoading, isConnected, isCorrectChainId, amount]);
+  const isButtonDisabled =
+    isAllowanceLoading || isBalanceLoading || !isConnected || !isCorrectChainId || amount === 0n;
 
   return { buttonText, isButtonDisabled };
 };
