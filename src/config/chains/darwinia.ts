@@ -50,5 +50,5 @@ export const darwinia: ChainConfig = {
     decimals: 18,
     logoPath: '/images/token/kton.svg'
   },
-  stakingContractAddress: '0x'
+  stakingContractAddress: '0x000000000419683a1a03abc21fc9da25fd2b4dd7'
 } as const satisfies ChainConfig;
