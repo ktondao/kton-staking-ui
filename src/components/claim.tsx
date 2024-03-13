@@ -77,7 +77,9 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
             </Tooltip>
           </TooltipProvider>
         )}
-        <span className=" text-[1.5rem] font-bold leading-normal text-white">RING</span>
+        <span className=" text-[1.5rem] font-bold leading-normal text-white">
+          {activeChain?.nativeToken.symbol}
+        </span>
       </div>
       <Button
         disabled={isButtonDisabled}
