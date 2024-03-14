@@ -13,6 +13,8 @@ import Button from '@/components/ui/ghost-button';
 import { useChain } from '@/hooks/useChain';
 import { getChains } from '@/utils/chain';
 
+import ErrorChain from './error-chain';
+
 import type { ChainConfig } from '@/types/chains';
 
 const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {
@@ -39,24 +41,29 @@ const ChainIconAndName = ({ chain }: { chain: ChainConfig }) => {
   );
 };
 
+const chains = getChains();
+
 const SwitchChain = () => {
   const [open, setOpen] = useState(false);
-  const chains = getChains();
-  const { activeChainId, activeChain, switchChain } = useChain();
+  const { activeChainId, activeChain, switchChain, isSupportedChainId } = useChain();
 
   return chains?.length && activeChain ? (
     <DropdownMenu onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button>
-          <ChainIconAndName chain={activeChain} />
-          <Image
-            src="/images/common/arrow-down.svg"
-            width={16}
-            height={16}
-            alt="arrow-down"
-            className={`transform transition-transform ${open ? 'rotate-180' : ''}`}
-          />
-        </Button>
+        {!isSupportedChainId ? (
+          <ErrorChain />
+        ) : (
+          <Button>
+            <ChainIconAndName chain={activeChain} />
+            <Image
+              src="/images/common/arrow-down.svg"
+              width={16}
+              height={16}
+              alt="arrow-down"
+              className={`transform transition-transform ${open ? 'rotate-180' : ''}`}
+            />
+          </Button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[8.5625rem] gap-[0.625rem] rounded-[0.3125rem] border border-primary p-[0.625rem]">
         {chains.map((chain) => (

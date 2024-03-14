@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 export type UseUnStakeStateType = {
   isConnected: boolean;
-  isCorrectChainId: boolean;
+  isSupportedChainId: boolean;
   isAmountLoading: boolean;
   isUnStaking: boolean;
   isUnstakeTransactionConfirming: boolean;
@@ -10,7 +10,7 @@ export type UseUnStakeStateType = {
 };
 export const useUnStakeState = ({
   isConnected,
-  isCorrectChainId,
+  isSupportedChainId,
   isAmountLoading,
   isUnStaking,
   isUnstakeTransactionConfirming,
@@ -18,15 +18,23 @@ export const useUnStakeState = ({
 }: UseUnStakeStateType) => {
   const buttonText = useMemo(() => {
     if (!isConnected) return 'Wallet Disconnected';
-    if (!isCorrectChainId) return 'Wrong Network';
+    if (!isSupportedChainId) return 'Wrong Network';
     if (isUnStaking) return 'Preparing Unstake';
     if (isUnstakeTransactionConfirming) return 'Confirming Unstake';
     if (isAmountLoading) return 'Preparing...';
 
     return 'Unstake';
-  }, [isConnected, isCorrectChainId, isAmountLoading, isUnstakeTransactionConfirming, isUnStaking]);
+  }, [
+    isConnected,
+    isSupportedChainId,
+    isAmountLoading,
+    isUnstakeTransactionConfirming,
+    isUnStaking
+  ]);
 
-  const isButtonDisabled = isAmountLoading || !isConnected || !isCorrectChainId || !amount;
+  const isButtonDisabled = isAmountLoading || !isConnected || !isSupportedChainId || !amount;
 
-  return { buttonText, isButtonDisabled };
+  const isFetching = isConnected && isSupportedChainId && isAmountLoading;
+
+  return { buttonText, isButtonDisabled, isFetching };
 };

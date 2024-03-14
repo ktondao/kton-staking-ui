@@ -54,6 +54,9 @@ const DefiTabs = () => {
           >
             <span
               className={cn(
+                'transition-colors',
+                'hover:text-primary/80',
+                'active:text-primary/60',
                 'cursor-pointer',
                 isTransactionActive ? transactionActiveClassName : ''
               )}

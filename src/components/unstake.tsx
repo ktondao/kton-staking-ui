@@ -24,7 +24,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
   const formRef: MutableRefObject<Form | null> = useRef(null);
   const [amount, setAmount] = useState<bigint>(0n);
   const { address, isConnected } = useAccount();
-  const { activeChain, isCorrectChainId } = useChain();
+  const { activeChain, isSupportedChainId } = useChain();
 
   const { refetch: refetchPoolAmount } = usePoolAmount();
 
@@ -36,7 +36,8 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
     contractAddress: activeChain.stakingContractAddress,
     abi,
     functionName: 'balanceOf',
-    args: [address!]
+    args: [address!],
+    forceEnabled: isSupportedChainId
   });
 
   const { unStake, isUnStaking, isUnstakeTransactionConfirming } = useUnStake({
@@ -48,9 +49,9 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
     }
   });
 
-  const { buttonText, isButtonDisabled } = useUnStakeState({
+  const { buttonText, isButtonDisabled, isFetching } = useUnStakeState({
     isConnected,
-    isCorrectChainId,
+    isSupportedChainId,
     isAmountLoading,
     isUnStaking,
     isUnstakeTransactionConfirming,
@@ -98,7 +99,7 @@ const UnStake = ({ onTransactionActiveChange }: UnStakeProps) => {
         isLoading={isUnStaking || isUnstakeTransactionConfirming}
         className={cn('mt-5 w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
-        {isAmountLoading ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
+        {isFetching ? <span className=" animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
     </AmountInputForm>
   );
