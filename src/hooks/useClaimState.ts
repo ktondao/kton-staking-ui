@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 export type UseClaimStateType = {
   isConnected: boolean;
-  isCorrectChainId: boolean;
+  isSupportedChainId: boolean;
   isClaiming: boolean;
   isClaimTransactionConfirming: boolean;
   isLoadingOrRefetching: boolean;
@@ -10,7 +10,7 @@ export type UseClaimStateType = {
 };
 export const useClaimState = ({
   isConnected,
-  isCorrectChainId,
+  isSupportedChainId,
   isClaiming,
   isClaimTransactionConfirming,
   isLoadingOrRefetching,
@@ -18,7 +18,7 @@ export const useClaimState = ({
 }: UseClaimStateType) => {
   const buttonText = useMemo(() => {
     if (!isConnected) return 'Wallet Disconnected';
-    if (!isCorrectChainId) return 'Wrong Network';
+    if (!isSupportedChainId) return 'Wrong Network';
     if (isClaiming) return 'Preparing Claim';
     if (isClaimTransactionConfirming) return 'Confirming Claim';
     if (isLoadingOrRefetching) return 'Preparing...';
@@ -26,14 +26,16 @@ export const useClaimState = ({
     return 'Claim';
   }, [
     isConnected,
-    isCorrectChainId,
+    isSupportedChainId,
     isClaiming,
     isClaimTransactionConfirming,
     isLoadingOrRefetching
   ]);
 
   const isButtonDisabled =
-    isLoadingOrRefetching || !isConnected || !isCorrectChainId || value === 0n;
+    isLoadingOrRefetching || !isConnected || !isSupportedChainId || value === 0n;
 
-  return { buttonText, isButtonDisabled };
+  const isFetching = isConnected && isSupportedChainId && isLoadingOrRefetching;
+
+  return { buttonText, isButtonDisabled, isFetching };
 };

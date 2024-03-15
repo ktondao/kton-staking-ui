@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 export type UseStakeStateType = {
   isConnected: boolean;
-  isCorrectChainId: boolean;
+  isSupportedChainId: boolean;
   isBalanceLoading: boolean;
   isAllowanceLoading: boolean;
   needApprove: boolean;
@@ -14,7 +14,7 @@ export type UseStakeStateType = {
 };
 export const useStakeState = ({
   isConnected,
-  isCorrectChainId,
+  isSupportedChainId,
   isBalanceLoading,
   isAllowanceLoading,
   needApprove,
@@ -26,7 +26,7 @@ export const useStakeState = ({
 }: UseStakeStateType) => {
   const buttonText = useMemo(() => {
     if (!isConnected) return 'Wallet Disconnected';
-    if (!isCorrectChainId) return 'Wrong Network';
+    if (!isSupportedChainId) return 'Wrong Network';
     if (isApproving) return 'Preparing Approval';
     if (isApproveTransactionConfirming) return 'Confirming Approval';
     if (isStaking) return 'Preparing Stake';
@@ -36,7 +36,7 @@ export const useStakeState = ({
     return 'Stake';
   }, [
     isConnected,
-    isCorrectChainId,
+    isSupportedChainId,
     isBalanceLoading,
     isAllowanceLoading,
     needApprove,
@@ -48,7 +48,8 @@ export const useStakeState = ({
   ]);
 
   const isButtonDisabled =
-    isAllowanceLoading || isBalanceLoading || !isConnected || !isCorrectChainId || amount === 0n;
+    isAllowanceLoading || isBalanceLoading || !isConnected || !isSupportedChainId || amount === 0n;
 
-  return { buttonText, isButtonDisabled };
+  const isFetching = isConnected && isSupportedChainId && (isBalanceLoading || isAllowanceLoading);
+  return { buttonText, isButtonDisabled, isFetching };
 };

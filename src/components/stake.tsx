@@ -29,7 +29,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
 
   const queryClient = useQueryClient();
   const { address, isConnected } = useAccount();
-  const { activeChain, isCorrectChainId } = useChain();
+  const { activeChain, isSupportedChainId } = useChain();
   const { refetch: refetchPoolAmount } = usePoolAmount();
 
   const {
@@ -40,7 +40,8 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     contractAddress: activeChain?.ktonToken.address,
     abi: erc20Abi,
     functionName: 'balanceOf',
-    args: [address!]
+    args: [address!],
+    forceEnabled: isSupportedChainId
   });
 
   const {
@@ -73,9 +74,9 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
     }
   });
 
-  const { isButtonDisabled, buttonText } = useStakeState({
+  const { isButtonDisabled, buttonText, isFetching } = useStakeState({
     isConnected,
-    isCorrectChainId,
+    isSupportedChainId,
     isBalanceLoading,
     isAllowanceLoading,
     needApprove,
@@ -146,11 +147,7 @@ const Stake = ({ onTransactionActiveChange }: StakeProps) => {
         }
         className={cn('mt-5 w-full rounded-[0.3125rem] text-[0.875rem] text-white')}
       >
-        {isAllowanceLoading || isBalanceLoading ? (
-          <span className="animate-pulse"> {buttonText}</span>
-        ) : (
-          buttonText
-        )}
+        {isFetching ? <span className="animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
     </AmountInputForm>
   );

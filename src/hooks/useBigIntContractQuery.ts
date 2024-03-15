@@ -45,7 +45,7 @@ export const useBigIntContractQuery = <
     functionName,
     args: args as any[],
     query: {
-      enabled: forceEnabled ? true : isConnected
+      enabled: typeof forceEnabled !== undefined ? forceEnabled : isConnected
     }
   });
 

@@ -1,8 +1,5 @@
 import { darwinia, crab, pangolin } from '@/config/chains';
 import { ChainConfig, ChainId } from '@/types/chains';
-import { CHAIN_ID_KEY } from '@/config/baseInfo';
-
-import { getItem } from './storage';
 
 // Map object to return a specific chain configuration
 // Using Record<ChainId, ChainConfig> to ensure type safety
@@ -32,25 +29,18 @@ export function getChains(): [ChainConfig, ...ChainConfig[]] {
   return [chainConfigs[0], ...chainConfigs.slice(1)] as [ChainConfig, ...ChainConfig[]];
 }
 
-// Returns the default chain configuration
-export function getDefaultChain(): ChainConfig {
-  return chainConfigMap[ChainId.DARWINIA];
-}
-
 // Returns the chain by its id
 export function getChainById(id: ChainId): ChainConfig | undefined {
   const chainConfig = chainConfigMap[id];
   return chainConfig;
 }
 
-// Returns the default chain id with local storage
-export function getDefaultChainIdWithLocalStorage(): ChainId {
-  const localChainId = getItem(CHAIN_ID_KEY);
-  return localChainId ? Number(localChainId) : getDefaultChain().id;
+// Returns the default chain configuration
+export function getDefaultChain(): ChainConfig {
+  return chainConfigMap[ChainId.DARWINIA];
 }
 
-// Returns the chain with local storage
-export function getDefaultChainWithLocalStorage(): ChainConfig {
-  const chainId = getDefaultChainIdWithLocalStorage();
-  return getChainById(chainId) || getDefaultChain();
+// Returns the default chain id
+export function getDefaultChainId(): ChainId {
+  return getDefaultChain().id;
 }

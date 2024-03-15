@@ -17,13 +17,14 @@ type ClaimProps = {
 };
 const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
   const { address, isConnected } = useAccount();
-  const { isCorrectChainId, activeChain } = useChain();
+  const { isSupportedChainId, activeChain } = useChain();
 
   const { value, formatted, isLoadingOrRefetching, refetch } = useBigIntContractQuery({
     contractAddress: activeChain.stakingContractAddress,
     abi,
     functionName: 'earned',
-    args: [address!]
+    args: [address!],
+    forceEnabled: isSupportedChainId && isConnected
   });
 
   const { claim, isClaiming, claimData, isClaimTransactionConfirming } = useClaim({
@@ -35,9 +36,9 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
     }
   });
 
-  const { buttonText, isButtonDisabled } = useClaimState({
+  const { buttonText, isButtonDisabled, isFetching } = useClaimState({
     isConnected,
-    isCorrectChainId,
+    isSupportedChainId,
     isClaiming,
     isClaimTransactionConfirming,
     isLoadingOrRefetching,
@@ -88,7 +89,7 @@ const Claim = ({ onTransactionActiveChange }: ClaimProps) => {
         onClick={claim}
         className="mt-5 w-full rounded-[0.3125rem] text-[0.875rem] text-white"
       >
-        {isLoadingOrRefetching ? <span className="animate-pulse"> {buttonText}</span> : buttonText}
+        {isFetching ? <span className="animate-pulse"> {buttonText}</span> : buttonText}
       </Button>
     </div>
   );

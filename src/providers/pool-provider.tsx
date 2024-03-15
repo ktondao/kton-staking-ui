@@ -27,13 +27,13 @@ export const PoolContext = createContext<PoolProviderType>({
 });
 
 export const PoolProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { activeChain } = useChain();
+  const { activeChain, isSupportedChainId } = useChain();
 
   const { value, formatted, isLoading, isRefetching, refetch, queryKey } = useBigIntContractQuery({
     contractAddress: activeChain?.stakingContractAddress,
     abi,
     functionName: 'totalSupply',
-    forceEnabled: true
+    forceEnabled: isSupportedChainId
   });
 
   return (
