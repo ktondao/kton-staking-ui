@@ -1,6 +1,5 @@
 'use client';
 import { useRef } from 'react';
-import { useDisconnect } from 'wagmi';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { useCopyToClipboard } from 'react-use';
 import { toast } from 'sonner';
@@ -12,20 +11,20 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Button from '@/components/ui/ghost-button';
+import { useDisconnectWallet } from '@/hooks/useDisconnectWallet';
 import { toShortAddress } from '@/utils';
 
 type AccountProps = {
-  address: string;
+  address: `0x${string}`;
 };
 const styles = {
   borderRadius: '50%'
 };
 const Account = ({ address }: AccountProps) => {
   const toastRef = useRef<string | number | null>(null);
-  const disconnectTimerRef: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
   const [, copyToClipboard] = useCopyToClipboard();
 
-  const { disconnect } = useDisconnect();
+  const { disconnectWallet } = useDisconnectWallet();
 
   const handleCopy = () => {
     copyToClipboard(address);
@@ -34,10 +33,7 @@ const Account = ({ address }: AccountProps) => {
     });
   };
   const handleDisconnect = () => {
-    disconnectTimerRef?.current && clearTimeout(disconnectTimerRef?.current);
-    disconnectTimerRef.current = setTimeout(() => {
-      disconnect();
-    }, 500);
+    disconnectWallet(address);
   };
 
   return address ? (
