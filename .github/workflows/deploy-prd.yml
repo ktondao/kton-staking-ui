@@ -25,6 +25,8 @@ jobs:
           vercel_group: itering
           preview_output: true
           dist_path: out
+          script_install: pnpm install
+          script_build: pnpm run build
           project_name: kton-stake
           prod_mode: true
           enable_cache: true
