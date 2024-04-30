@@ -63,10 +63,13 @@ export function toFixed(value: number | string, fractionDigits: number): string 
   if (isNaN(num) || typeof fractionDigits !== 'number' || fractionDigits < 0) {
     return value.toString();
   }
-
-  const re = new RegExp(`^-?\\d+(?:\\.\\d{0,${fractionDigits}})?`);
-  const match = num.toString().match(re);
-  return match ? match[0] : value.toString();
+  // fix the issue of toFixed error
+  try {
+    return num.toFixed(fractionDigits);
+  } catch (e) {
+    console.error('safeToFixed error:', e);
+    return value.toString();
+  }
 }
 
 export type FormattedNumericValue = {
