@@ -46,7 +46,7 @@ const queryClient = new QueryClient();
 
 export function Web3AppProvider({ children }: React.PropsWithChildren<{}>) {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={config} reconnectOnMount={false}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>{children}</RainbowKitProvider>
       </QueryClientProvider>
