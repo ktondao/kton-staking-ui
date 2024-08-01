@@ -1,11 +1,12 @@
-import { darwinia, crab } from '@/config/chains';
+import { darwinia, crab, koi} from '@/config/chains';
 import { ChainConfig, ChainId } from '@/types/chains';
 
 // Map object to return a specific chain configuration
 // Using Record<ChainId, ChainConfig> to ensure type safety
 const chainConfigMap: Record<ChainId, ChainConfig> = {
   [ChainId.DARWINIA]: darwinia,
-  [ChainId.CRAB]: crab
+  [ChainId.CRAB]: crab,
+  [ChainId.KOI]: koi
 };
 
 // Helper function to filter testnets in production

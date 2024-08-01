@@ -37,7 +37,7 @@ export function useStake({ ownerAddress, onSuccess, onError }: UseStakeProps) {
         abi,
         address: activeChain?.stakingContractAddress,
         account: ownerAddress!,
-        functionName: 'stake',
+        functionName: 'lockAndStake',
         args: [parseEther(amount)]
       })?.catch((data) => {
         updateOperationStatus('stake', 0);

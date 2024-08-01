@@ -46,9 +46,11 @@ export const darwinia: ChainConfig = {
   },
   ktonToken: {
     address: '0x0000000000000000000000000000000000000402',
+    //address: '0x6FB1cE2dc2043FEc15d4d8A58cAF06a47A8f025F',
     symbol: 'KTON',
     decimals: 18,
     logoPath: '/images/token/kton.svg'
   },
   stakingContractAddress: '0x000000000419683a1a03abc21fc9da25fd2b4dd7'
+  //stakingContractAddress: '0x6FB1cE2dc2043FEc15d4d8A58cAF06a47A8f025F'
 } as const satisfies ChainConfig;

@@ -36,7 +36,7 @@ export function useUnStake({ ownerAddress, onError, onSuccess }: UseUnStakeProps
         abi,
         address: activeChain?.stakingContractAddress,
         account: ownerAddress!,
-        functionName: 'withdraw',
+        functionName: 'unlockAndWithdraw',
         args: [parseEther(amount)]
       })?.catch((data) => {
         updateOperationStatus('unstake', 0);

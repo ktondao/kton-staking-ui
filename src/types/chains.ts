@@ -4,7 +4,8 @@ import type { Chain } from '@rainbow-me/rainbowkit';
  */
 export enum ChainId {
   CRAB = 44,
-  DARWINIA = 46
+  DARWINIA = 46,
+  KOI = 701
 }
 
 interface NativeToken {
