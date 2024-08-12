@@ -36,5 +36,5 @@ export const koi: ChainConfig = {
         decimals: 18,
         logoPath: '/images/token/pkton.svg'
     },
-    stakingContractAddress: '0x6FB1cE2dc2043FEc15d4d8A58cAF06a47A8f025F'
+    stakingContractAddress: '0xB633Ad1142941CA2Eb9C350579cF88BbE266660D'
 } as const satisfies ChainConfig;
