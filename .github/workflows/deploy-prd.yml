@@ -31,7 +31,7 @@ jobs:
           dist_path: out
           script_install: pnpm install
           script_build: pnpm run build
-          project_name: kton-stake
+          project_name: kton-stake-v2
           prod_mode: true
           enable_cache: true
           enable_notify_slack: true

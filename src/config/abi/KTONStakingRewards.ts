@@ -217,5 +217,23 @@ export const abi = [
     payable: false,
     constant: false,
     stateMutability: 'nonpayable'
+  },
+  {
+    name: 'lockAndStake',
+    type: 'function',
+    inputs: [{ name: 'amount', type: 'uint256', internalType: 'uint256' }],
+    outputs: [],
+    payable: false,
+    constant: false,
+    stateMutability: 'nonpayable'
+  },
+  {
+    name: 'unlockAndWithdraw',
+    type: 'function',
+    inputs: [{ name: 'amount', type: 'uint256', internalType: 'uint256' }],
+    outputs: [],
+    payable: false,
+    constant: false,
+    stateMutability: 'nonpayable'
   }
 ] as const;
