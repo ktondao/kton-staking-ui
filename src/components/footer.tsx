@@ -1,16 +1,25 @@
+'use client'
 import Image from 'next/image';
 
 import { socialConfig } from '@/config/social';
+import { useChain } from '@/hooks/useChain';
 
 const currentYear = new Date().getUTCFullYear();
 
 const Footer = () => {
+  const { activeChain } = useChain();
   return (
     <footer className="flex h-[3.13rem] items-center">
       <div className="max-auto flex w-full items-center justify-center px-8 md:justify-between">
         <span className="text-sm font-light capitalize text-white/50">
           &copy; {currentYear} Darwinia Network
         </span>
+        {activeChain?.daoUrl &&
+          (
+            <div>
+              <a href={`https://${activeChain?.daoUrl}`} target="_blank" className='pl-[60px] underline text-[12px]' style={{ color: 'rgba(255,255,255,.5)' }}>{activeChain?.daoUrl}</a>
+            </div>)
+        }
 
         <div className="hidden items-center gap-5 md:flex">
           {socialConfig.map(({ url, name, iconPath }) => (

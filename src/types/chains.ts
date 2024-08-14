@@ -26,4 +26,5 @@ export interface ChainConfig extends Chain {
   nativeToken: NativeToken;
   ktonToken: KtonToken;
   stakingContractAddress: `0x${string}`;
+  daoUrl?: string;
 }

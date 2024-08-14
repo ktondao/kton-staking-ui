@@ -35,6 +35,7 @@ export const darwinia: ChainConfig = {
    * rainbowkit iconUrl
    */
   iconUrl: '/images/chains/darwinia.png',
+  daoUrl: 'www.tally.xyz/gov/ktondao',
 
   /**
    * Token info
@@ -50,5 +51,5 @@ export const darwinia: ChainConfig = {
     decimals: 18,
     logoPath: '/images/token/kton.svg'
   },
-  stakingContractAddress: '0x000000000419683a1a03abc21fc9da25fd2b4dd7'
+  stakingContractAddress: '0xB633Ad1142941CA2Eb9C350579cF88BbE266660D'
 } as const satisfies ChainConfig;

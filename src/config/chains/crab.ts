@@ -30,6 +30,7 @@ export const crab: ChainConfig = {
    * rainbowkit iconUrl
    */
   iconUrl: '/images/chains/crab.svg',
+  daoUrl: 'www.tally.xyz/gov/cktondao',
 
   /**
    * Token info
