@@ -12,8 +12,8 @@ const Header = () => {
       <div className="mx-auto flex h-full w-full items-center justify-between px-8">
         <Link href="/" title="darwinia" className="hidden md:inline ">
           <Image
-            src={'/images/common/logo.png'}
-            alt="darwinia logo"
+            src={'/images/common/ktonDaoV2.png'}
+            alt="ktonDaoV2 logo"
             priority
             width={154}
             height={18}
