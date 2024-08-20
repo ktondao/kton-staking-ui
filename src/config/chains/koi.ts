@@ -16,7 +16,7 @@ export const koi: ChainConfig = {
     },
     blockExplorers: {
         default: {
-          name: 'Koi scan',
+          name: 'Koi Scan',
           url: 'https://koi-scan.darwinia.network/'
         }
     },
