@@ -12,13 +12,26 @@ const Footer = () => {
     <footer className="flex h-[3.13rem] items-center">
       <div className="max-auto flex w-full items-center justify-center px-8 md:justify-between">
         <span className="text-sm font-light capitalize text-white/50">
-          &copy; {currentYear} Darwinia Network
+          &copy; {currentYear} KtonDAO
         </span>
         {activeChain?.daoUrl &&
           (
-            <div>
-              <a href={`https://${activeChain?.daoUrl}`} target="_blank" className='pl-[60px] underline text-[12px]' style={{ color: 'rgba(255,255,255,.5)' }}>{activeChain?.daoUrl}</a>
-            </div>)
+            <><div>
+            <a href={`https://${activeChain?.daoUrl}`} target="_blank" className='pl-[60px] underline text-[12px]' style={{ color: 'rgba(255,255,255,.5)' }}>{activeChain?.daoUrl}</a>
+            </div>
+            <div className="pl-[60px] text-[12px]" style={{ color: 'rgba(255,255,255,.5)' }}>
+              V1 Migration:{' '}
+              <a
+                href="https://staking-v1.ktondao.xyz/"
+                target="_blank"
+                className="underline"
+                style={{ color: 'rgba(255,255,255,.5)' }}
+              >
+                staking-v1.ktondao.xyz
+              </a>
+            </div></>  
+          )
+            
         }
 
         <div className="hidden items-center gap-5 md:flex">
