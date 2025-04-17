@@ -35,7 +35,7 @@ export const darwinia: ChainConfig = {
    * rainbowkit iconUrl
    */
   iconUrl: '/images/chains/darwinia.png',
-  daoUrl: 'www.tally.xyz/gov/ktondao',
+  daoUrl: 'https://gov.ktondao.xyz/',
 
   /**
    * Token info
