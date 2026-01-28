@@ -1,17 +1,15 @@
-import { darwinia, crab, koi} from '@/config/chains';
+import { darwinia } from '@/config/chains';
 import { ChainConfig, ChainId } from '@/types/chains';
 
 // Map object to return a specific chain configuration
 // Using Record<ChainId, ChainConfig> to ensure type safety
 const chainConfigMap: Record<ChainId, ChainConfig> = {
-  [ChainId.DARWINIA]: darwinia,
-  [ChainId.CRAB]: crab,
-  [ChainId.KOI]: koi
+  [ChainId.DARWINIA]: darwinia
 };
 
 // Helper function to filter testnets in production
 function filterTestnetsInProduction(chains: Record<ChainId, ChainConfig>): ChainConfig[] {
-  const chainConfigs = Object.values(chainConfigMap).sort((a, b) => {
+  const chainConfigs = Object.values(chains).sort((a, b) => {
     return b.id - a.id;
   });
   // if (process.env.NODE_ENV === 'production') {
@@ -33,6 +31,13 @@ export function getChains(): [ChainConfig, ...ChainConfig[]] {
 export function getChainById(id: ChainId): ChainConfig | undefined {
   const chainConfig = chainConfigMap[id];
   return chainConfig;
+}
+
+// Resolves the chain config from the wallet's chain id, falling back to the default chain
+// when the wallet is disconnected or on an unsupported network.
+export function resolveChainFromWalletChainId(walletChainId?: number | null): ChainConfig {
+  if (walletChainId == null) return getDefaultChain();
+  return getChainById(walletChainId as ChainId) || getDefaultChain();
 }
 
 // Returns the default chain configuration

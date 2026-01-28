@@ -4,7 +4,7 @@ import React, { createContext, useCallback, useEffect } from 'react';
 import { useAccount, useSwitchChain } from 'wagmi';
 
 import { ChainConfig, ChainId } from '@/types/chains';
-import { getChainById, getDefaultChain, getDefaultChainId } from '@/utils/chain';
+import { getDefaultChain, getDefaultChainId, resolveChainFromWalletChainId } from '@/utils/chain';
 
 interface ChainContextType {
   isSupportedChainId: boolean;
@@ -32,8 +32,8 @@ export const ChainProvider: React.FC<React.PropsWithChildren<{}>> = ({ children 
     [switchChain]
   );
 
-  const activeChain = getChainById(chainId as ChainId) || getDefaultChain();
-  const activeChainId = chainId || getDefaultChainId();
+  const activeChain = resolveChainFromWalletChainId(chainId);
+  const activeChainId = activeChain.id;
 
   useEffect(() => {
     if (activeChain?.name) {
