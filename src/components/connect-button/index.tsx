@@ -5,7 +5,6 @@ import { useAccount } from 'wagmi';
 import Button from '@/components/ui/ghost-button';
 
 import Account from './account';
-import SwitchChain from './switch-chain';
 
 const ConnectButton = () => {
   const { openConnectModal } = useConnectModal();
@@ -16,7 +15,6 @@ const ConnectButton = () => {
       {!isConnected && openConnectModal ? (
         <Button onClick={openConnectModal}>Connect Wallet</Button>
       ) : null}
-      {isConnected && address ? <SwitchChain /> : null}
       {isConnected && address ? <Account address={address} /> : null}
     </div>
   );
