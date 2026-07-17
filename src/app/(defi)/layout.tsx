@@ -12,7 +12,7 @@ const KTONPool = dynamic(() => import('@/components/kton-pool'), {
 
 const DefiLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="flex h-full w-full items-center justify-center px-10 ">
+    <div className="flex min-h-full w-full items-center justify-center px-10 py-5">
       <PoolProvider>
         <div className="container flex flex-col items-center justify-center gap-5 rounded-[1.25rem] bg-[#242A2E] p-5 sm:w-[25rem]">
           <KTONPool />

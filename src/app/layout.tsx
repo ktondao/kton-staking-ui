@@ -33,7 +33,7 @@ export default function RootLayout({
             <AppProvider>
               <div className="flex h-dvh w-screen flex-col overflow-hidden lg:h-screen">
                 <Header />
-                <main className="flex-1">{children}</main>
+                <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
                 <Footer />
               </div>
               <Toaster position="top-right" duration={5000} />

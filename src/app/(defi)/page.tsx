@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { menuItems } from '@/config/menu';
 import KTONActionLoading from '@/components/kton-action-loading';
 import ClaimLoading from '@/components/claim-loading';
+import ClaimRewardsNotice from '@/components/claim-rewards-notice';
 import { cn } from '@/lib/utils';
 
 const Stake = dynamic(() => import('@/components/stake'), {
@@ -75,7 +76,7 @@ const DefiTabs = () => {
               value === item.key && (
                 <TabsContent key={item.key} value={item.key} className="mt-0">
                   <motion.div
-                    initial={{ opacity: 0 }}
+                    initial={false}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5, ease: 'easeIn' }}
@@ -88,7 +89,10 @@ const DefiTabs = () => {
                       <UnStakes onTransactionActiveChange={setIsTransactionActive} />
                     )}
                     {value === 'claim' && (
-                      <Claim onTransactionActiveChange={setIsTransactionActive} />
+                      <>
+                        <ClaimRewardsNotice />
+                        <Claim onTransactionActiveChange={setIsTransactionActive} />
+                      </>
                     )}
                   </motion.div>
                 </TabsContent>
