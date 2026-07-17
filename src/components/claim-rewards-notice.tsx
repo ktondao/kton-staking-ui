@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ExternalLink } from 'lucide-react';
 
-export const RINGDAO_REWARDS_PROPOSAL_URL =
-  'https://gov.ringdao.com/proposal/0xf26faca1125af8f9813c5d88fecf533aa11d5a1b4f9b6dcd131c90206156dd1d';
+export const KTONDAO_REWARDS_PROPOSAL_URL =
+  'https://gov.ktondao.xyz/proposal/0xb20b4feabca368f82aa819edce05e65a20d8ebbd998f0681143bbe6958052469';
 
 const ClaimRewardsNotice = () => {
   return (
@@ -18,10 +18,10 @@ const ClaimRewardsNotice = () => {
           REWARD UPDATE
         </h2>
         <a
-          href={RINGDAO_REWARDS_PROPOSAL_URL}
+          href={KTONDAO_REWARDS_PROPOSAL_URL}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="View the RingDAO governance proposal about KTON staking rewards (opens in a new tab)"
+          aria-label="View the KtonDAO governance proposal about KTON staking rewards (opens in a new tab)"
           className="inline-flex shrink-0 items-center gap-1 text-[0.625rem] font-bold leading-4 text-white/60 underline decoration-white/30 underline-offset-4 transition-colors hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
         >
           VIEW PROPOSAL
